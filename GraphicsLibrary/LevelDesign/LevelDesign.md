@@ -7,4 +7,4 @@ Legend:
 ## Level One:
 This level is on a 25x25 grid. There is no mobs or keys on this level because there is already an added level of difficulty. <br>
 The entire level is dark, and there is a circle of light around the player that is the only visible portion of the level.
-![level one design](https://github.com/notsaad/KinaxisContest/blob/master/GraphicsLibrary/LevelDesign/Level1%20Design.png)
+![level one design](https://github.com/notsaad/KinaxisContest/blob/master/GraphicsLibrary/LevelDesign/Level1/Level1%20Design.png)

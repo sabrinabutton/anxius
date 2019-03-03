@@ -9,3 +9,8 @@ This level is on a 25x25 grid. There is no mobs or keys on this level because th
 The entire level is dark, and there is a circle of light around the player that is the only visible portion of the level.
 
 ![level one design](https://github.com/notsaad/KinaxisContest/blob/master/GraphicsLibrary/LevelDesign/Level1/Level1%20Design.png)
+
+## Level Two:
+This level is on a 25x25 grid. There is 3 mobs on this level and 3 keys on this level. You must dodge all of the mobs on this level, as well as obtain all of the keys before you can complete this level. The keys on this level are meant to signify numbers of your locker combo, and when you get all three you can open your locker and move on to the next level.
+
+![level two design](https://github.com/notsaad/KinaxisContest/blob/master/GraphicsLibrary/LevelDesign/Level2/Level2%20Design.png)

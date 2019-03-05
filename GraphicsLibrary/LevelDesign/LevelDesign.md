@@ -21,3 +21,8 @@ The entire level is dark, and there is a circle of light around the player that 
 This level is on a 25x25 grid. There is 3 mobs on this level and 3 keys on this level. You must dodge all of the mobs on this level, as well as obtain all of the keys before you can complete this level. The keys on this level are meant to signify numbers of your locker combo, and when you get all three you can open your locker and move on to the next level.
 
 ![level two design](https://github.com/notsaad/KinaxisContest/blob/master/GraphicsLibrary/LevelDesign/Level2/Level2%20Design.png)
+
+## Conclusion:
+This level looks impossible, and intially is. However, the point of this level is to show that if you are suffering from this type of mental illness, someone helping can show you the way. Another person would come and help bring you to the door.
+
+![conclusion design](https://github.com/notsaad/KinaxisContest/blob/master/GraphicsLibrary/LevelDesign/Conclusion/Conclusion%20Design.png)

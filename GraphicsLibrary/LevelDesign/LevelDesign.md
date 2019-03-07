@@ -27,7 +27,7 @@ This level has two parts. On the first part of the level you must get the key, o
 
 ![level three design part one](https://github.com/notsaad/KinaxisContest/blob/master/GraphicsLibrary/LevelDesign/Level3/Level3%20Design%20(1).png)
 
-![level three design part one](https://github.com/notsaad/KinaxisContest/blob/master/GraphicsLibrary/LevelDesign/Level3/Level3%20Design%20(2).png
+![level three design part two](https://github.com/notsaad/KinaxisContest/blob/master/GraphicsLibrary/LevelDesign/Level3/Level3%20Design%20(2).png)
 
 ## Conclusion:
 This level looks impossible, and intially is. However, the point of this level is to show that if you are suffering from this type of mental illness, someone helping can show you the way. Another person would come and help bring you to the door.

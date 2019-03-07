@@ -22,6 +22,13 @@ This level is on a 25x25 grid. There is 3 mobs on this level and 3 keys on this 
 
 ![level two design](https://github.com/notsaad/KinaxisContest/blob/master/GraphicsLibrary/LevelDesign/Level2/Level2%20Design.png)
 
+## Level Three:
+This level has two parts. On the first part of the level you must get the key, once you have the key the character is taken to the second part of the level where they must find the door. Throughout this level the character experiences flashbacks to the intial presentation.
+
+![level three design part one](https://github.com/notsaad/KinaxisContest/blob/master/GraphicsLibrary/LevelDesign/Level3/Level3%20Design%20(1).png)
+
+![level three design part one](https://github.com/notsaad/KinaxisContest/blob/master/GraphicsLibrary/LevelDesign/Level3/Level3%20Design%20(2).png
+
 ## Conclusion:
 This level looks impossible, and intially is. However, the point of this level is to show that if you are suffering from this type of mental illness, someone helping can show you the way. Another person would come and help bring you to the door.
 

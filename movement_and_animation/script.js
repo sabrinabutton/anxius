@@ -7,83 +7,96 @@ document.addEventListener('keyup', keyUnpressed, false);
 //Width and height for our canvas
 var canvasWidth = 96;
 var canvasHeight = 96;
-//the with and height of our spritesheet
-var spriteWidth = 32;
-var spriteHeight = 32;
-//we are having two rows and 8 cols in the current sprite sheet
-var cols = 3;
-//The 0th (first) row is for the right movement
-var trackRight = 0;
-//1st (second) row for the left movement (counting the index from 0)
-var trackLeft = 1;
-//To get the width of a single sprite we divided the width of sprite with the number of cols
-//because all the sprites are of equal width and height
-var width = spriteWidth;
-//Same for the height we divided the height with number of rows
-var height = spriteHeight;
-//Each row contains 8 frame and at start we will display the first frame (assuming the index from 0)
-var curFrame = 0;
-//The total frame is 8
-var frameCount = 3;
-//x and y coordinates to render the sprite
-var x=0;
-var y=0;
-//x and y coordinates of the canvas to get the single frame
-var srcX=0;
-var srcY=0;
-//x and y coordinates of characters prev. pos to be cleared
-var lastX;
-var lastY;
-
 //Getting the canvas
 var canvas = document.getElementById('canvas');
 //setting width and height of the canvas
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
-
 //Establishing a context to the canvas
-var ctx = canvas.getContext("2d");
+var context = canvas.getContext("2d");
 //Creating an Image object for our character
-var character = new Image();
-
+var maincharacter = new Image();
 //Setting the source to the image file
-character.src = "playersprite.png";
+maincharacter.src = "playersprite.png";
 
-function updateFrame(){
- //Updating the frame index
- curFrame = ++curFrame % frameCount;
+function sprite(options){
 
- //Calculating the x coordinate for spritesheet
- srcX = curFrame * width;
+  var that = {};
 
-		ctx.clearRect(lastX,lastY,width,height);
+  // values for this case
+  //that.context=options.context
+  that.x=options.x;
+  that.y=options.y;
+  that.srcX=options.srcX;
+  that.srcY=options.srcY;
+  that.lastX=options.lastX;
+  that.lastY=options.lastY;
+  that.width=options.width;
+  that.height=options.height;
+  that.image=options.image;
+  that.frameCount=options.frameCount;
+  that.curFrame=options.curFrame;
+
+  that.show=function()
+  {
+      context.drawImage(that.image,that.srcX, that.srcY,that.width,that.height,that.x,that.y,that.width,that.height);
+  }
+
+  that.update=function(){
+   //Updating the frame index
+   that.curFrame = ++that.curFrame % that.frameCount;
+
+   //Calculating the x coordinate for spritesheet
+   that.srcX = that.curFrame * that.width;
+  		context.clearRect(that.lastX,that.lastY,that.width,that.height);
+  }
+
+  return that;
 }
+
+var player = sprite({
+  //context: canvas.getContext("2d"),
+  x: 30,
+  y: 30,
+  srcX:0,
+  srcY: 0,
+  lastX:0,
+  lastY:0,
+  width: 32,
+  height: 32,
+  image: maincharacter,
+  frameCount: 3,
+  curFrame: 0
+})
+
+
 
 function draw(){
  //Updating the frame
- updateFrame();
+player.update();
  //Drawing the image
- ctx.drawImage(character,srcX,srcY,width,height,x,y,width,height);
+ player.show();
  //set lastx and lasty
- lastX = x;
- lastY = y;
+ player.lastX = player.x;
+ player.lastY = player.y;
  //moves the maincharacter
 if(goRight){
 		 ///character.x += 5;
-		 x+=5;
+		 player.x+=5;
  }
 else if(goLeft) {
 	 //character.x -= 5;
-	 x-=5;
+	 player.x-=5;
  }
 if(goUp) {
 	 //character.y -= 5;
-	 y-=5;
+	 player.y-=5;
  }
 else if(goDown) {
 	 //character.y += 5;
-	 y+=5;
+	 player.y+=5;
  }
+ console.log("draw loop");
 }
 
 //for when the arrow keys are pressed

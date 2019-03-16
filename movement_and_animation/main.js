@@ -5,30 +5,45 @@ var goUp=false;
 var goDown=false;
 //var for whether or not character is moving
 var moving = false;
+//collision variables
+var leftcollision = false;
+var rightcollision = false;
+var upcollision = false;
+var downcollision = false;
 //tell computer what keydown and keyup mean
 document.addEventListener('keydown', keyPressed, false);
 document.addEventListener('keyup', keyUnpressed, false);
-
+//players wheravouts in game
+var playerlocationfunc = level1;
+var playerlocationstr = "level1";
 
 //create canvas
 //Width and height for our canvas
 var canvasWidth = 420;
 var canvasHeight = 420;
-//Getting the canvas
-var canvas = document.getElementById('canvas');
+//Getting the canvas 1st layer
+var layer1 = document.getElementById('layer2');
 //setting width and height of the canvas
-canvas.width = canvasWidth;
-canvas.height = canvasHeight;
+layer1.width = canvasWidth;
+layer1.height = canvasHeight;
 //Establishing a context to the canvas
-var context = canvas.getContext("2d");
-function background(){
-  document.body.style.background = "backgroundimage.png";
-}
-
+var l1ctx = layer1.getContext("2d");
+//Getting the canvas 2nd layer
+var layer2 = document.getElementById('layer2');
+//setting width and height of the canvas
+layer2.width = canvasWidth;
+layer2.height = canvasHeight;
+//Establishing a context to the canvas
+var l2ctx = layer2.getContext("2d");
 
 //importing graphics
 var maincharacterImage = new Image();
 maincharacterImage.src = "playersprite.png";
+
+//set background function
+function background(){
+  document.body.style.backgroundImage = "url('backgroundimage.png')";
+}
 
 //declare sprite
 function sprite(options){
@@ -53,7 +68,7 @@ function sprite(options){
   that.show=function()
   {
     //draw image
-      context.drawImage(that.image,that.srcX, that.srcY,that.sheetwidth,that.sheetheight,that.x,that.y,that.sizewidth,that.sizeheight);
+      l1ctx.drawImage(that.image,that.srcX, that.srcY,that.sheetwidth,that.sheetheight,that.x,that.y,that.sizewidth,that.sizeheight);
   }
 
   //UPDATE FUNCTION
@@ -72,7 +87,7 @@ function sprite(options){
     //Calculating the x coordinate for spritesheet
     that.srcX = that.curFrame * that.sheetwidth;
     //clear
-       context.clearRect(that.lastX,that.lastY,that.sizewidth,that.sizeheight);
+       l1ctx.clearRect(that.lastX,that.lastY,that.sizewidth,that.sizeheight);
   }
 
   return that;
@@ -89,108 +104,197 @@ var player = sprite({
   lastY:0,
   sheetwidth: 32,
   sheetheight: 32,
-  sizewidth: 96,
-  sizeheight: 96,
+  sizewidth: 32,
+  sizeheight: 32,
   image: maincharacterImage,
   frameCount: 3,
   curFrame: 0
 })
 
+
 //declare obstacle
-function obstacle (x,y,width,height){
-  this.x = x;
-  this.y = y;
-  this.width = width;
-  this.height  =  height;
+function obstacle(options){
 
+  var that = {};
 
-  this.show = function(){
-    fill(0);
-      rect(this.x, this.y, this.width, this.height);
+  that.noOfVals = options.noOfVals;
+  that.xvalues = options.xvalues;
+  that.yvalues = options.yvalues;
+
+  that.build = function(){
+  l2ctx.fillStyle = "#eae3f9";
+  l2ctx.fillRect(that.xvalues[0], that.yvalues[0], 20, 420);
+  l2ctx.fillRect(that.xvalues[1], that.yvalues[1], 420, 20);
+    l2ctx.fillRect(that.xvalues[2], that.yvalues[2], 20, 420);
+    l2ctx.fillRect(that.xvalues[3], that.yvalues[3], 420, 20);
     }
+
+    return that;
 }
 
-//create a platform (walls)
+var level1wall = obstacle({
+  noOfVals: 3,
+  xvalues: [1, 1, 400, 1],
+  yvalues: [1, 1, 1, 400]
+})
 
-//gameloop
-function draw(){
-  //set background
-  background();
- //Updating the frame
-player.update();
- //Drawing the image
- player.show();
- //set lastx and lasty
- player.lastX = player.x;
- player.lastY = player.y;
- //moves the maincharacter
-if(goRight){
-		 ///character.x += 5;
-		 player.x+=5;
- }
-else if(goLeft) {
-	 //character.x -= 5;
-	 player.x-=5;
- }
-if(goUp) {
-	 //character.y -= 5;
-	 player.y-=5;
- }
-else if(goDown) {
-	 //character.y += 5;
-	 player.y+=5;
- }
+//declare door
+function door(options){
+  var that = {};
+
+  return that;
+}
+
+function chest(options){
+  var that = {};
+
+  return that;
+}
+
+//general movement FUNCTION
+function movementUpdate(){
+  //set lastx and lasty before moving
+  player.lastX = player.x;
+  player.lastY = player.y;
+  //moves the maincharacter
+    if(goRight && !rightcollision){
+    		 ///character.x += 5;
+    		 player.x+=5;
+     }
+    else if(goLeft && !leftcollision) {
+    	 //character.x -= 5;
+    	 player.x-=5;
+     }
+   if(goUp && !upcollision) {
+   	 //character.y -= 5;
+   	 player.y-=5;
+    }
+   else if(goDown && !downcollision) {
+   	 //character.y += 5;
+   	 player.y+=5;
+    }
+
 }
 
 //for when the arrow keys are pressed
 function keyPressed(event){
-	if (event.keyCode == '39')
-	{
-		goRight=true;
+  if (event.keyCode == '39')
+  {
+    goRight=true;
       moving = true;
-	}
-	else if (event.keyCode == '37')
-	{
-		goLeft= true;
+  }
+  else if (event.keyCode == '37')
+  {
+    goLeft= true;
       moving = true;
-	}
-	if (event.keyCode == '40')
-	{
-		goDown= true;
+  }
+  if (event.keyCode == '40')
+  {
+    goDown= true;
       moving = true;
-	}
-	else if (event.keyCode == '38')
-	{
-		goUp= true;
+  }
+  else if (event.keyCode == '38')
+  {
+    goUp= true;
       moving = true;
-	}
+  }
 
 }
 //for when the keys are let go
 function keyUnpressed(event){
-	if (event.keyCode == '39')
-	{
-		goRight=false;
+  if (event.keyCode == '39')
+  {
+    goRight=false;
     moving = false;
-	}
-	else if (event.keyCode == '37')
-	{
-		goLeft= false;
+  }
+  else if (event.keyCode == '37')
+  {
+    goLeft= false;
     moving = false;
-	}
-	if (event. keyCode == '40')
-	{
-		goDown= false;
+  }
+  if (event. keyCode == '40')
+  {
+    goDown= false;
     moving = false;
-	}
-	else if (event. keyCode == '38')
-	{
-		goUp= false;
+  }
+  else if (event. keyCode == '38')
+  {
+    goUp= false;
     moving = false;
-	}
+  }
 
 }
+
+//general collisions FUNCTION
+function collisionsUpdate(){
+  var currentwall = playerlocationstr + "wall";
+  console.log(currentwall);
+
+  //check for each x and y value of currentwall
+  for(var i=0;i<=currentwall.noOfVals;i++){
+    //set collisions
+    if (currentwall.xvalues.includes(player.x+20)){
+      rightcollision = true;
+    }
+    else{
+      rightcollision = false;
+    }
+    if(currentwall.x==player.x-20){
+      leftcollision = true;
+    }
+     else{
+       leftcollision = false;
+     }
+     if (currentwall.y==player.y+20){
+       downcollision = true;
+     }
+     else{
+       downcollision = false;
+     }
+     if(currentwall.y==player.y-20){
+       upcollision = true;
+     }
+     else{
+       upcollision = false;
+     }
+  }
+}
+
+//function for level 1
+function level1(){
+  //set background
+  background();
+ //Updating the frame
+ player.update();
+ //Drawing the player
+ player.show();
+ //draw the wall
+ level1wall.build();
+ //update movement
+ movementUpdate();
+ //update collisions
+ collisionsUpdate();
+
+}
+
+//function for level 2
+function level2(){
+
+}
+
+//function for level 3
+function level3(){
+
+}
+
+//gameloop
+function gameLoop(){
+    //do level player is currently on
+    playerlocationfunc();
+}
+
+
   //(for movement) if player is not vertically colliding, CAN vertically move, same apps. for horizontally
 
-//set for gameLoop to only occur every 100ms
-setInterval(draw,100);
+//set for gameLoop to only occur every 200ms
+setInterval(gameLoop,100);

@@ -3,8 +3,6 @@ var goRight=false;
 var goLeft=false;
 var goUp=false;
 var goDown=false;
-//var for whether or not character is moving
-var moving = false;
 //collision variables
 var leftcollision = false;
 var rightcollision = false;
@@ -14,13 +12,13 @@ var downcollision = false;
 document.addEventListener('keydown', keyPressed, false);
 document.addEventListener('keyup', keyUnpressed, false);
 //players wheravouts in game
-var playerlocationfunc = level1;
-var playerlocationstr = "level1";
+var playerlocationfunc = level0;
+var playerlocationstr = "level0";
 
 //create canvas
 //Width and height for our canvas
-var canvasWidth = 420;
-var canvasHeight = 420;
+var canvasWidth = 910;
+var canvasHeight = 910;
 //Getting the canvas 1st layer
 var layer1 = document.getElementById('layer2');
 //setting width and height of the canvas
@@ -39,6 +37,8 @@ var l2ctx = layer2.getContext("2d");
 //importing graphics
 var maincharacterImage = new Image();
 maincharacterImage.src = "playersprite.png";
+var demonImage = new Image();
+demonImage.src = "demonsprite.png";
 
 //set background function
 function background(){
@@ -52,6 +52,7 @@ function sprite(options){
   // values for this case
   that.x=options.x;
   that.y=options.y;
+  that.moving=options.moving;
   that.srcX=options.srcX;
   that.srcY=options.srcY;
   that.lastX=options.lastX;
@@ -74,7 +75,7 @@ function sprite(options){
   //UPDATE FUNCTION
   that.update=function(){
   //player moving frame updates
-    if(moving){
+    if(that.moving){
       //Updating the frame index
       that.curFrame = ++that.curFrame % that.frameCount;
     }
@@ -88,6 +89,8 @@ function sprite(options){
     that.srcX = that.curFrame * that.sheetwidth;
     //clear
        l1ctx.clearRect(that.lastX,that.lastY,that.sizewidth,that.sizeheight);
+
+       console.log(that, that.curFrame);
   }
 
   return that;
@@ -98,6 +101,7 @@ var player = sprite({
   //context: canvas.getContext("2d"),
   x: 30,
   y: 30,
+  moving: false,
   srcX:0,
   srcY: 0,
   lastX:0,
@@ -108,6 +112,24 @@ var player = sprite({
   sizeheight: 32,
   image: maincharacterImage,
   frameCount: 3,
+  curFrame: 0
+})
+
+var demon = sprite({
+  //context: canvas.getContext("2d"),
+  x: 70,
+  y: 30,
+  moving: true,
+  srcX:0,
+  srcY: 0,
+  lastX:70,
+  lastY:30,
+  sheetwidth: 128,
+  sheetheight: 32,
+  sizewidth: 32,
+  sizeheight: 32,
+  image: demonImage,
+  frameCount: 4,
   curFrame: 0
 })
 
@@ -122,20 +144,25 @@ function obstacle(options){
   that.yvalues = options.yvalues;
 
   that.build = function(){
-  l2ctx.fillStyle = "#eae3f9";
-  l2ctx.fillRect(that.xvalues[0], that.yvalues[0], 20, 420);
-  l2ctx.fillRect(that.xvalues[1], that.yvalues[1], 420, 20);
-    l2ctx.fillRect(that.xvalues[2], that.yvalues[2], 20, 420);
-    l2ctx.fillRect(that.xvalues[3], that.yvalues[3], 420, 20);
+    l2ctx.fillStyle = "#000000";
+    l2ctx.fillRect(that.xvalues[0], that.yvalues[0], 30, 910);
+    l2ctx.fillRect(that.xvalues[1], that.yvalues[1], 910, 30);
+    l2ctx.fillRect(that.xvalues[2], that.yvalues[2], 30, 910);
+    l2ctx.fillRect(that.xvalues[3], that.yvalues[3], 910, 30);
+    for(var i=65; i<845; i+=75){
+          for(var o=65; o<845; o+=75){
+            l2ctx.fillRect(i, o, 30, 30)
+          }
+      }
     }
 
     return that;
 }
 
-var level1wall = obstacle({
+var level0wall = obstacle({
   noOfVals: 3,
-  xvalues: [1, 1, 400, 1],
-  yvalues: [1, 1, 1, 400]
+  xvalues: [1, 1, 880, 1],
+  yvalues: [1, 1, 1, 880]
 })
 
 //declare door
@@ -160,18 +187,23 @@ function movementUpdate(){
     if(goRight && !rightcollision){
     		 ///character.x += 5;
     		 player.x+=5;
+         //tell that player is moving
+         player.moving = true;
      }
     else if(goLeft && !leftcollision) {
     	 //character.x -= 5;
     	 player.x-=5;
+       player.moving = true;
      }
    if(goUp && !upcollision) {
    	 //character.y -= 5;
    	 player.y-=5;
+     player.moving = true;
     }
    else if(goDown && !downcollision) {
    	 //character.y += 5;
    	 player.y+=5;
+     player.moving = true;
     }
 
 }
@@ -181,22 +213,18 @@ function keyPressed(event){
   if (event.keyCode == '39')
   {
     goRight=true;
-      moving = true;
   }
   else if (event.keyCode == '37')
   {
     goLeft= true;
-      moving = true;
   }
   if (event.keyCode == '40')
   {
     goDown= true;
-      moving = true;
   }
   else if (event.keyCode == '38')
   {
     goUp= true;
-      moving = true;
   }
 
 }
@@ -205,22 +233,22 @@ function keyUnpressed(event){
   if (event.keyCode == '39')
   {
     goRight=false;
-    moving = false;
+    player.moving = false;
   }
   else if (event.keyCode == '37')
   {
     goLeft= false;
-    moving = false;
+    player.moving = false;
   }
   if (event. keyCode == '40')
   {
     goDown= false;
-    moving = false;
+    player.moving = false;
   }
   else if (event. keyCode == '38')
   {
     goUp= false;
-    moving = false;
+    player.moving = false;
   }
 
 }
@@ -228,7 +256,6 @@ function keyUnpressed(event){
 //general collisions FUNCTION
 function collisionsUpdate(){
   var currentwall = playerlocationstr + "wall";
-  console.log(currentwall);
 
   //check for each x and y value of currentwall
   for(var i=0;i<=currentwall.noOfVals;i++){
@@ -261,29 +288,33 @@ function collisionsUpdate(){
 }
 
 //function for level 1
-function level1(){
+function level0(){
   //set background
   background();
- //Updating the frame
- player.update();
- //Drawing the player
- player.show();
- //draw the wall
- level1wall.build();
- //update movement
- movementUpdate();
- //update collisions
- collisionsUpdate();
+  //Updating the frame
+  player.update();
+  //Drawing the player
+  player.show();
+  //update demon frame
+  demon.update();
+  //draw demon
+  demon.show();
+  //draw the wall
+  level0wall.build();
+  //update movement
+  movementUpdate();
+  //update collisions
+  collisionsUpdate();
+
+}
+
+//function for level 1
+function level1(){
 
 }
 
 //function for level 2
 function level2(){
-
-}
-
-//function for level 3
-function level3(){
 
 }
 

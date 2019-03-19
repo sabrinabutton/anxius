@@ -33,12 +33,21 @@ layer2.width = canvasWidth;
 layer2.height = canvasHeight;
 //Establishing a context to the canvas
 var l2ctx = layer2.getContext("2d");
+//getting canvas 3rd layer
+var layer3 = document.getElementById('layer3');
+//setting width and height of the canvas
+layer3.width = canvasWidth;
+layer3.height = canvasHeight;
+//Establishing a context to the canvas
+var l3ctx = layer3.getContext("2d");
 
 //importing graphics
 var maincharacterImage = new Image();
 maincharacterImage.src = "playersprite.png";
 var demonImage = new Image();
 demonImage.src = "demonsprite.png";
+var doorImage = new Image();
+doorImage.src = "doorsprite.png";
 
 //set background function
 function background(){
@@ -50,6 +59,7 @@ function sprite(options){
   var that = {};
 
   // values for this case
+  that.context = options.context;
   that.x=options.x;
   that.y=options.y;
   that.moving=options.moving;
@@ -69,7 +79,7 @@ function sprite(options){
   that.show=function()
   {
     //draw image
-      l1ctx.drawImage(that.image,that.srcX, that.srcY,that.sheetwidth,that.sheetheight,that.x,that.y,that.sizewidth,that.sizeheight);
+      that.context.drawImage(that.image,that.srcX, that.srcY,that.sheetwidth,that.sheetheight,that.x,that.y,that.sizewidth,that.sizeheight);
   }
 
   //UPDATE FUNCTION
@@ -83,14 +93,11 @@ function sprite(options){
     else {
       //set current frame to 0
         that.curFrame = 0;
-
     }
     //Calculating the x coordinate for spritesheet
     that.srcX = that.curFrame * that.sheetwidth;
     //clear
-       l1ctx.clearRect(that.lastX,that.lastY,that.sizewidth,that.sizeheight);
-
-       console.log(that, that.curFrame);
+       that.context.clearRect(that.lastX,that.lastY,that.sizewidth,that.sizeheight);
   }
 
   return that;
@@ -98,7 +105,8 @@ function sprite(options){
 
 //create a sprite for the player
 var player = sprite({
-  //context: canvas.getContext("2d"),
+
+  context: l3ctx,
   x: 30,
   y: 30,
   moving: false,
@@ -116,7 +124,8 @@ var player = sprite({
 })
 
 var demon = sprite({
-  //context: canvas.getContext("2d"),
+
+  context: l1ctx,
   x: 70,
   y: 30,
   moving: true,
@@ -124,12 +133,12 @@ var demon = sprite({
   srcY: 0,
   lastX:70,
   lastY:30,
-  sheetwidth: 128,
+  sheetwidth: 32,
   sheetheight: 32,
   sizewidth: 32,
   sizeheight: 32,
   image: demonImage,
-  frameCount: 4,
+  frameCount: 3,
   curFrame: 0
 })
 
@@ -150,9 +159,13 @@ function obstacle(options){
     l2ctx.fillRect(that.xvalues[2], that.yvalues[2], 30, 910);
     l2ctx.fillRect(that.xvalues[3], that.yvalues[3], 910, 30);
     for(var i=65; i<845; i+=75){
+      var valuescount = 0
           for(var o=65; o<845; o+=75){
-            l2ctx.fillRect(i, o, 30, 30)
+            l2ctx.fillRect(i, o, 30, 30);
+            that.xvalues[valuescount] = i;
+            that.yvalues[valuescount] = o;
           }
+          valuescount++;
       }
     }
 
@@ -160,7 +173,7 @@ function obstacle(options){
 }
 
 var level0wall = obstacle({
-  noOfVals: 3,
+  noOfVals: 124,
   xvalues: [1, 1, 880, 1],
   yvalues: [1, 1, 1, 880]
 })
@@ -169,8 +182,45 @@ var level0wall = obstacle({
 function door(options){
   var that = {};
 
+  that.opened = options.opened;
+  that.image = options.image;
+  that.x = options.x;
+  that.y = options.y;
+  that.srcX = options.srcX;
+  that.srcY = options.srcY;
+  that.sheetwidth=options.sheetwidth;
+  that.sheetheight=options.sheetheight;
+  that.sizewidth=options.sizewidth;
+  that.sizeheight=options.sizeheight;
+
+  that.show = function(){
+    //if door is opened
+    if(that.opened == false){
+          that.srcY = 0;
+    }
+    //if door is closed
+    else if(that.opened == true){
+          that.srcY = 48;
+    }
+    l2ctx.drawImage(that.image,that.srcX, that.srcY,that.sheetwidth,that.sheetheight,that.x,that.y,that.sizewidth,that.sizeheight);
+  }
+
   return that;
 }
+
+var level0door = door({
+
+  x: 778,
+  y: 795,
+  opened: false,
+  srcX:0,
+  srcY: 0,
+  sheetwidth: 32,
+  sheetheight: 48,
+  sizewidth: 32,
+  sizeheight: 48,
+  image: doorImage,
+})
 
 function chest(options){
   var that = {};
@@ -186,23 +236,23 @@ function movementUpdate(){
   //moves the maincharacter
     if(goRight && !rightcollision){
     		 ///character.x += 5;
-    		 player.x+=5;
+    		 player.x+=10;
          //tell that player is moving
          player.moving = true;
      }
     else if(goLeft && !leftcollision) {
     	 //character.x -= 5;
-    	 player.x-=5;
+    	 player.x-=10;
        player.moving = true;
      }
    if(goUp && !upcollision) {
    	 //character.y -= 5;
-   	 player.y-=5;
+   	 player.y-=10;
      player.moving = true;
     }
    else if(goDown && !downcollision) {
    	 //character.y += 5;
-   	 player.y+=5;
+   	 player.y+=10;
      player.moving = true;
     }
 
@@ -260,25 +310,25 @@ function collisionsUpdate(){
   //check for each x and y value of currentwall
   for(var i=0;i<=currentwall.noOfVals;i++){
     //set collisions
-    if (currentwall.xvalues.includes(player.x+20)){
+    if (currentwall.xvalues[i]==(player.x+20)){
       rightcollision = true;
     }
     else{
       rightcollision = false;
     }
-    if(currentwall.x==player.x-20){
+    if(currentwall.xvalues[i]==player.x-20){
       leftcollision = true;
     }
      else{
        leftcollision = false;
      }
-     if (currentwall.y==player.y+20){
+     if (currentwall.yvalues[i]==player.y+20){
        downcollision = true;
      }
      else{
        downcollision = false;
      }
-     if(currentwall.y==player.y-20){
+     if(currentwall.yvalues[i]==player.y-20){
        upcollision = true;
      }
      else{
@@ -301,6 +351,8 @@ function level0(){
   demon.show();
   //draw the wall
   level0wall.build();
+  //show door
+  level0door.show();
   //update movement
   movementUpdate();
   //update collisions

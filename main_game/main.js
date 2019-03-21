@@ -159,13 +159,13 @@ function obstacle(options){
     l2ctx.fillRect(that.xvalues[2], that.yvalues[2], 30, 910);
     l2ctx.fillRect(that.xvalues[3], that.yvalues[3], 910, 30);
     for(var i=65; i<845; i+=75){
-      var valuescount = 0
+      var valuescount = 4;
           for(var o=65; o<845; o+=75){
             l2ctx.fillRect(i, o, 30, 30);
             that.xvalues[valuescount] = i;
             that.yvalues[valuescount] = o;
+            valuescount++;
           }
-          valuescount++;
       }
     }
 

@@ -235,8 +235,8 @@ function door(options){
 
 var level0door = door({
 
-  x: 778,
-  y: 795,
+  x: 845,
+  y: 830,
   opened: false,
   srcX:0,
   srcY: 0,

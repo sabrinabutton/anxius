@@ -142,6 +142,10 @@ var demon = sprite({
   curFrame: 0
 })
 
+//function for demon movement
+function demonAI(){
+
+}
 
 //declare obstacle
 function obstacle(options){
@@ -151,31 +155,53 @@ function obstacle(options){
   that.noOfVals = options.noOfVals;
   that.xvalues = options.xvalues;
   that.yvalues = options.yvalues;
-
-  that.build = function(){
-    l2ctx.fillStyle = "#000000";
-    l2ctx.fillRect(that.xvalues[0], that.yvalues[0], 30, 910);
-    l2ctx.fillRect(that.xvalues[1], that.yvalues[1], 910, 30);
-    l2ctx.fillRect(that.xvalues[2], that.yvalues[2], 30, 910);
-    l2ctx.fillRect(that.xvalues[3], that.yvalues[3], 910, 30);
-    for(var i=65; i<845; i+=75){
-      var valuescount = 4;
-          for(var o=65; o<845; o+=75){
-            l2ctx.fillRect(i, o, 30, 30);
-            that.xvalues[valuescount] = i;
-            that.yvalues[valuescount] = o;
-            valuescount++;
-          }
-      }
-    }
+    that.build = options.build;
 
     return that;
 }
 
 var level0wall = obstacle({
+
   noOfVals: 124,
   xvalues: [1, 1, 880, 1],
-  yvalues: [1, 1, 1, 880]
+  yvalues: [1, 1, 1, 880],
+  //function to build level
+  build:
+  function buildlevel(){
+    l2ctx.fillStyle = "#000000";
+    l2ctx.fillRect(this.xvalues[0], this.yvalues[0], 30, 910);
+    l2ctx.fillRect(this.xvalues[1],this.yvalues[1], 910, 30);
+    l2ctx.fillRect(this.xvalues[2], this.yvalues[2], 30, 910);
+    l2ctx.fillRect(this.xvalues[3], this.yvalues[3], 910, 30);
+    for(var i=65; i<845; i+=75){
+      var valuescount = 4
+          for(var o=65; o<845; o+=75){
+            l2ctx.fillRect(i, o, 30, 30);
+            this.xvalues[valuescount] = i;
+            this.yvalues[valuescount] = o;
+            valuescount++;
+          }
+
+      }
+  }
+
+})
+var level1wall = obstacle({
+
+  noOfVals: 5,
+  xvalues: [1, 1, 880, 1, 65],
+  yvalues: [1, 1, 1, 880, 65],
+  //function to build level
+  build:
+  function buildlevel(){
+    l2ctx.fillStyle = "#000000";
+    l2ctx.fillRect(this.xvalues[0], this.yvalues[0], 30, 910);
+    l2ctx.fillRect(this.xvalues[1],this.yvalues[1], 910, 30);
+    l2ctx.fillRect(this.xvalues[2], this.yvalues[2], 30, 910);
+    l2ctx.fillRect(this.xvalues[3], this.yvalues[3], 910, 30);
+    l2ctx.fillRect(this.xvalues[4], this.yvalues[4], 780, 30);
+  }
+
 })
 
 //declare door
@@ -204,11 +230,24 @@ function door(options){
     }
     l2ctx.drawImage(that.image,that.srcX, that.srcY,that.sheetwidth,that.sheetheight,that.x,that.y,that.sizewidth,that.sizeheight);
   }
-
   return that;
 }
 
 var level0door = door({
+
+  x: 778,
+  y: 795,
+  opened: false,
+  srcX:0,
+  srcY: 0,
+  sheetwidth: 32,
+  sheetheight: 48,
+  sizewidth: 32,
+  sizeheight: 48,
+  image: doorImage,
+})
+
+var level1door = door({
 
   x: 778,
   y: 795,

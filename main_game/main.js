@@ -13,6 +13,7 @@ document.addEventListener('keydown', keyPressed, false);
 document.addEventListener('keyup', keyUnpressed, false);
 //players wheravouts in game for making strings
 var playerlocationstr = "level0";
+var currentmatrix;
 
 //create canvas
 //Width and height for our canvas
@@ -59,6 +60,34 @@ var level0matrix = [
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+]
+
+var testmatrix = [
+    [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -137,8 +166,8 @@ function sprite(options){
 var player = sprite({
 
   context: l3ctx,
-  x: 30,
-  y: 30,
+  x: 48,
+  y: 48,
   moving: false,
   srcX:0,
   srcY: 0,
@@ -178,7 +207,6 @@ function demonAI(){
 }
 
 function buildlevel(){
-  var currentmatrix = level0matrix;
   //console.log(currentmatrix);
   var xvalue = 0;
   var yvalue = 0;
@@ -201,14 +229,14 @@ function buildlevel(){
       }
       //if current matrix value holds 3, signifies key
       if(currentmatrix[i][j] == 3){
-        key.x = j * 36;
-        key.y = i * 36;
+        key.x = (j * 36) + 9;
+        key.y = (i * 36) + 5;
         //show door
         key.show();
       }
 
       xvalue+=36;
-      console.log("Matrix Y = ", i, ", Matrix X = ", j, "Value = ", level0matrix[i][j])
+      //console.log("Matrix Y = ", i, ", Matrix X = ", j, "Value = ", level0matrix[i][j])
     }
     //reset y value
     xvalue = 0;
@@ -260,18 +288,20 @@ function keyobject(options){
   that.y = options.y;
 
   that.show = function(){
-    l2ctx.Image(keyImage, that.x, that.y, 16, 16);
+    l2ctx.drawImage(keyImage, that.x, that.y, 32, 32);
   }
   return that;
 }
 
 var key = keyobject({
-  x: 35,
-  y: 35
+  x: 0,
+  y: 0
 })
 
 //general movement FUNCTION
 function movementUpdate(){
+  //update collisions
+  collisionsUpdate();
   //set lastx and lasty before moving
   player.lastX = player.x;
   player.lastY = player.y;
@@ -347,17 +377,48 @@ function keyUnpressed(event){
 
 //general collisions FUNCTION
 function collisionsUpdate(){
+  //set all collisions to false
+  leftcollision = false;
+  rightcollision = false;
+  upcollision = false;
+  downcollision = false;
     //first get player matrix locations by dividing current by 36
-    var matrixX = player.x/36;
-    var martixY = player.y/36;
+    var matrixX = (player.x/36) + 1;
+    var matrixY = (player.y/36) + 1;
+    //round values down
+      matrixX = Math.floor(matrixX);
+      matrixY = Math.floor(matrixY);
+      console.log("X = ", matrixX, "Y = ", matrixY);
 
     //set collsisions based on matrix values around player
+    if(currentmatrix[matrixX - 1][matrixY] == 1){
+      //set collision to true
+      leftcollision = true;
+      console.log("LEFT COL");
+    }
+    else if(currentmatrix[matrixX + 1][matrixY] == 1){
+      //set collision to true
+      rightcollision = true;
+      console.log("RIGHT COL");
+    }
+    else if(currentmatrix[matrixX][matrixY + 1] == 1){
+      //set collision to true
+      downcollision = true;
+      console.log("DOWN COL");
+    }
+    else if(currentmatrix[matrixX][matrixY - 1] == 1){
+      //set collision to true
+      upcollision = true;
+      console.log("UP COL");
+    }
 }
 
 //gameloop
 function gameLoop(){
     //do level player is currently on
     //playerlocationfunc();
+    //set current matrix
+    currentmatrix = level0matrix;
     //set background
     background();
     //Updating the frame
@@ -377,8 +438,7 @@ function gameLoop(){
     //level0door.show();
     //update movement
     movementUpdate();
-    //update collisions
-    collisionsUpdate();
+
 }
 
 

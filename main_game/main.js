@@ -11,14 +11,13 @@ var downcollision = false;
 //tell computer what keydown and keyup mean
 document.addEventListener('keydown', keyPressed, false);
 document.addEventListener('keyup', keyUnpressed, false);
-//players wheravouts in game
-var playerlocationfunc = level0;
+//players wheravouts in game for making strings
 var playerlocationstr = "level0";
 
 //create canvas
 //Width and height for our canvas
-var canvasWidth = 910;
-var canvasHeight = 910;
+var canvasWidth = 900;
+var canvasHeight = 900;
 //Getting the canvas 1st layer
 var layer1 = document.getElementById('layer2');
 //setting width and height of the canvas
@@ -48,6 +47,37 @@ var demonImage = new Image();
 demonImage.src = "demonsprite.png";
 var doorImage = new Image();
 doorImage.src = "doorsprite.png";
+var keyImage = new Image();
+keyImage.src = "key.png";
+
+//matrix for each level
+var level0matrix = [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+]
 
 //set background function
 function background(){
@@ -147,77 +177,47 @@ function demonAI(){
 
 }
 
-//declare obstacle
-function obstacle(options){
+function buildlevel(){
+  var currentmatrix = playerlocationstr + "matrix";
+  //console.log(currentmatrix);
+  var xvalue = 0;
+  var yvalue = 0;
 
-  var that = {};
+  for(var i=0;i<=25;i++){
+    for(var j=0;j<=25;j++){
+      //if current matrix value holds a 1, signfies wall
+      if (level0matrix[i][j] == 1){
+        //draw square at current i and j values size 36 by 36
+        l2ctx.fillStyle = "#000000";
+        l2ctx.fillRect(xvalue, yvalue, 36, 36);
+      }
+      //if current matrix value holds 2, signifies door
+      if(level0matrix[i][j] == 2){
+        door.x = i;
+        door.y = j;
+        door.show();
+      }
 
-  that.noOfVals = options.noOfVals;
-  that.xvalues = options.xvalues;
-  that.yvalues = options.yvalues;
-    that.build = options.build;
+      xvalue+=36;
+      console.log("Matrix1 = ", i, "Matrix2 = ", j)
+    }
+    //reset y value
+    xvalue = 0;
+    //add to x
+    yvalue+=36;
+  }
 
-    return that;
 }
 
-var level0wall = obstacle({
-
-  noOfVals: 124,
-  xvalues: [1, 1, 880, 1],
-  yvalues: [1, 1, 1, 880],
-  //function to build level
-  build:
-  function buildlevel(){
-    l2ctx.fillStyle = "#000000";
-    l2ctx.fillRect(this.xvalues[0], this.yvalues[0], 30, 910);
-    l2ctx.fillRect(this.xvalues[1],this.yvalues[1], 910, 30);
-    l2ctx.fillRect(this.xvalues[2], this.yvalues[2], 30, 910);
-    l2ctx.fillRect(this.xvalues[3], this.yvalues[3], 910, 30);
-    for(var i=65; i<845; i+=75){
-      var valuescount = 4
-          for(var o=65; o<845; o+=75){
-            l2ctx.fillRect(i, o, 30, 30);
-            this.xvalues[valuescount] = i;
-            this.yvalues[valuescount] = o;
-            valuescount++;
-          }
-
-      }
-  }
-
-})
-var level1wall = obstacle({
-
-  noOfVals: 5,
-  xvalues: [1, 1, 880, 1, 65],
-  yvalues: [1, 1, 1, 880, 65],
-  //function to build level
-  build:
-  function buildlevel(){
-    l2ctx.fillStyle = "#000000";
-    l2ctx.fillRect(this.xvalues[0], this.yvalues[0], 30, 910);
-    l2ctx.fillRect(this.xvalues[1],this.yvalues[1], 910, 30);
-    l2ctx.fillRect(this.xvalues[2], this.yvalues[2], 30, 910);
-    l2ctx.fillRect(this.xvalues[3], this.yvalues[3], 910, 30);
-    l2ctx.fillRect(this.xvalues[4], this.yvalues[4], 780, 30);
-  }
-
-})
-
 //declare door
-function door(options){
+function doorobject(options){
   var that = {};
 
   that.opened = options.opened;
-  that.image = options.image;
   that.x = options.x;
   that.y = options.y;
   that.srcX = options.srcX;
   that.srcY = options.srcY;
-  that.sheetwidth=options.sheetwidth;
-  that.sheetheight=options.sheetheight;
-  that.sizewidth=options.sizewidth;
-  that.sizeheight=options.sizeheight;
 
   that.show = function(){
     //if door is opened
@@ -228,44 +228,38 @@ function door(options){
     else if(that.opened == true){
           that.srcY = 48;
     }
-    l2ctx.drawImage(that.image,that.srcX, that.srcY,that.sheetwidth,that.sheetheight,that.x,that.y,that.sizewidth,that.sizeheight);
+    l2ctx.drawImage(doorImage,that.srcX, that.srcY,32,48,that.x,that.y,32,48);
   }
   return that;
 }
 
-var level0door = door({
+var door = doorobject({
 
-  x: 845,
-  y: 830,
+  x: 0,
+  y: 0,
   opened: false,
   srcX:0,
   srcY: 0,
-  sheetwidth: 32,
-  sheetheight: 48,
-  sizewidth: 32,
-  sizeheight: 48,
-  image: doorImage,
 })
 
-var level1door = door({
 
-  x: 778,
-  y: 795,
-  opened: false,
-  srcX:0,
-  srcY: 0,
-  sheetwidth: 32,
-  sheetheight: 48,
-  sizewidth: 32,
-  sizeheight: 48,
-  image: doorImage,
-})
 
-function chest(options){
+/*function keyobject(options){
   var that = {};
+  that.x = options.x;
+  that.y = options.y;
+
+  that.show = function(){
+    l2ctx.Image(keyImage, that.x, that.y, 16, 16);
+  }
 
   return that;
 }
+
+var key = keyobject(){
+  x: 35,
+  y: 35
+}*/
 
 //general movement FUNCTION
 function movementUpdate(){
@@ -376,43 +370,31 @@ function collisionsUpdate(){
   }
 }
 
-//function for level 1
-function level0(){
-  //set background
-  background();
-  //Updating the frame
-  player.update();
-  //Drawing the player
-  player.show();
-  //update demon frame
-  demon.update();
-  //draw demon
-  demon.show();
-  //draw the wall
-  level0wall.build();
-  //show door
-  level0door.show();
-  //update movement
-  movementUpdate();
-  //update collisions
-  collisionsUpdate();
-
-}
-
-//function for level 1
-function level1(){
-
-}
-
-//function for level 2
-function level2(){
-
-}
-
 //gameloop
 function gameLoop(){
     //do level player is currently on
-    playerlocationfunc();
+    //playerlocationfunc();
+    //set background
+    background();
+    //Updating the frame
+    player.update();
+    //Drawing the player
+    player.show();
+    //update demon frame
+    demon.update();
+    //draw demon
+    demon.show();
+    buildlevel();
+    //show keys
+    //level0key.show();
+    //draw the wall
+    //level0wall.build();
+    //show door
+    //level0door.show();
+    //update movement
+    movementUpdate();
+    //update collisions
+    collisionsUpdate();
 }
 
 

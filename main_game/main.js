@@ -73,10 +73,10 @@ var level0matrix = [
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]
 
 //set background function
@@ -178,28 +178,37 @@ function demonAI(){
 }
 
 function buildlevel(){
-  var currentmatrix = playerlocationstr + "matrix";
+  var currentmatrix = level0matrix;
   //console.log(currentmatrix);
   var xvalue = 0;
   var yvalue = 0;
 
-  for(var i=0;i<=25;i++){
-    for(var j=0;j<=25;j++){
+  for(var i=0;i<=24;i++){
+    for(var j=0;j<=24;j++){
       //if current matrix value holds a 1, signfies wall
-      if (level0matrix[i][j] == 1){
+      if (currentmatrix[i][j] == 1){
         //draw square at current i and j values size 36 by 36
         l2ctx.fillStyle = "#000000";
         l2ctx.fillRect(xvalue, yvalue, 36, 36);
       }
       //if current matrix value holds 2, signifies door
-      if(level0matrix[i][j] == 2){
-        door.x = i;
-        door.y = j;
+     if(currentmatrix[i][j] == 2){
+        //set to matrix value x 36 to be equivalent on scale of grid
+        door.x = j * 36;
+        door.y = (i * 36) - 12;
+        //show door
         door.show();
+      }
+      //if current matrix value holds 3, signifies key
+      if(currentmatrix[i][j] == 3){
+        key.x = j * 36;
+        key.y = i * 36;
+        //show door
+        key.show();
       }
 
       xvalue+=36;
-      console.log("Matrix1 = ", i, "Matrix2 = ", j)
+      console.log("Matrix Y = ", i, ", Matrix X = ", j, "Value = ", level0matrix[i][j])
     }
     //reset y value
     xvalue = 0;
@@ -244,22 +253,22 @@ var door = doorobject({
 
 
 
-/*function keyobject(options){
+function keyobject(options){
   var that = {};
+
   that.x = options.x;
   that.y = options.y;
 
   that.show = function(){
     l2ctx.Image(keyImage, that.x, that.y, 16, 16);
   }
-
   return that;
 }
 
-var key = keyobject(){
+var key = keyobject({
   x: 35,
   y: 35
-}*/
+})
 
 //general movement FUNCTION
 function movementUpdate(){
@@ -338,36 +347,11 @@ function keyUnpressed(event){
 
 //general collisions FUNCTION
 function collisionsUpdate(){
-  var currentwall = playerlocationstr + "wall";
+    //first get player matrix locations by dividing current by 36
+    var matrixX = player.x/36;
+    var martixY = player.y/36;
 
-  //check for each x and y value of currentwall
-  for(var i=0;i<=currentwall.noOfVals;i++){
-    //set collisions
-    if (currentwall.xvalues[i]==(player.x+20)){
-      rightcollision = true;
-    }
-    else{
-      rightcollision = false;
-    }
-    if(currentwall.xvalues[i]==player.x-20){
-      leftcollision = true;
-    }
-     else{
-       leftcollision = false;
-     }
-     if (currentwall.yvalues[i]==player.y+20){
-       downcollision = true;
-     }
-     else{
-       downcollision = false;
-     }
-     if(currentwall.yvalues[i]==player.y-20){
-       upcollision = true;
-     }
-     else{
-       upcollision = false;
-     }
-  }
+    //set collsisions based on matrix values around player
 }
 
 //gameloop

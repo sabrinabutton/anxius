@@ -394,22 +394,22 @@ function collisionsUpdate(){
     if(currentmatrix[matrixX - 1][matrixY] == 1){
       //set collision to true
       leftcollision = true;
-      console.log("LEFT COL");
+      console.log("LEFT COL, LOOKING AT A ", currentmatrix[matrixX - 1][matrixY]);
     }
-    else if(currentmatrix[matrixX + 1][matrixY] == 1){
+    if(currentmatrix[matrixX + 1][matrixY] == 1){
       //set collision to true
       rightcollision = true;
-      console.log("RIGHT COL");
+      console.log("RIGHT COL, LOOKING AT A ", currentmatrix[matrixX + 1][matrixY]);
     }
-    else if(currentmatrix[matrixX][matrixY + 1] == 1){
+    if(currentmatrix[matrixX][matrixY + 1] == 1){
       //set collision to true
       downcollision = true;
-      console.log("DOWN COL");
+      console.log("DOWN COL, LOOKING AT A ", currentmatrix[matrixX ][matrixY + 1]);
     }
-    else if(currentmatrix[matrixX][matrixY - 1] == 1){
+    if(currentmatrix[matrixX][matrixY - 1] == 1){
       //set collision to true
       upcollision = true;
-      console.log("UP COL");
+      console.log("UP COL, LOOKING AT A ", currentmatrix[matrixX][matrixY - 1]);
     }
 }
 
@@ -418,7 +418,7 @@ function gameLoop(){
     //do level player is currently on
     //playerlocationfunc();
     //set current matrix
-    currentmatrix = level0matrix;
+    currentmatrix = testmatrix;
     //set background
     background();
     //Updating the frame
@@ -426,16 +426,11 @@ function gameLoop(){
     //Drawing the player
     player.show();
     //update demon frame
-    demon.update();
+    //demon.update();
     //draw demon
-    demon.show();
+    //demon.show();
+    //build level
     buildlevel();
-    //show keys
-    //level0key.show();
-    //draw the wall
-    //level0wall.build();
-    //show door
-    //level0door.show();
     //update movement
     movementUpdate();
 

@@ -1,0 +1,55 @@
+var wasHere;
+var finalPath;
+var finalPathLen=-1;
+var currentX = (demon.x/36)+1;
+var currentY = (demon.y/36)+1;
+var goalX = (player.x/36)+1;
+var goalY = (player.y/36)+1;
+var marked;
+
+function recursiveAlgorithm(x, y){
+  //if at goal
+      if((x == goalX)&&(y == goalY)){
+        //return current location?
+        return x, y;
+      }
+      else{
+          //if *direction is not a wall and is unmarked
+          //*right
+          if((currentmatrix[x+1][y] != 1) && (marked[x+1][y] == false)){
+                //change location
+                x++;
+                //mark location
+                mark[x][y] = true;
+                //find path from location
+                return recursiveAlgorithm(x, y);
+          }
+          //*left
+          if((currentmatrix[x-1][y] != 1) && (marked[x-1][y] == false)){
+              //change location
+              x--;
+              //mark location
+              mark[x][y] = true;
+              //find path from location
+              return recursiveAlgorithm(x, y);
+          }
+          //*down
+          if((currentmatrix[x][y+1] != 1) && (marked[x][y+1] == false)){
+            //change location
+            y++;
+            //mark location
+            mark[x][y] = true;
+            //find path from location
+            return recursiveAlgorithm(x, y);
+          }
+          //*up
+          if((currentmatrix[x][y-1] != 1) && (marked[x][y-1] == false)){
+            //change location
+            y--;
+            //mark location
+            mark[x][y] = true;
+            //find path from location
+            return recursiveAlgorithm(x, y);
+          }
+      }
+}

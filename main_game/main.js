@@ -555,34 +555,36 @@ function collisionsUpdate(){
   rightcollision = false;
   upcollision = false;
   downcollision = false;
-    //first get player matrix locations by dividing current by 36
-    var matrixX = (player.x/36) + 1;
-    var matrixY = (player.y/36) + 1;
+    //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
+    matrixX = (player.x+16)/36;
+    matrixY = (player.y+16)/36;
+
+
     //round values down
       matrixX = Math.floor(matrixX);
       matrixY = Math.floor(matrixY);
       console.log("X = ", matrixX, "Y = ", matrixY);
 
     //set collsisions based on matrix values around player
-    if(currentmatrix[matrixX - 1][matrixY] == 1){
+    if(currentmatrix[matrixY][matrixX-1] == 1){
       //set collision to true
       leftcollision = true;
-      console.log("LEFT COL, LOOKING AT A ", currentmatrix[matrixX - 1][matrixY]);
+      console.log("LEFT COL, LOOKING AT A ", currentmatrix[matrixX - 1][matrixY], " WHEN CHECKING (",matrixX-1,", ", matrixY,")");
     }
-    if(currentmatrix[matrixX + 0][matrixY] == 1){
+    if(currentmatrix[matrixY][matrixX+1] == 1){
       //set collision to true
       rightcollision = true;
-      console.log("RIGHT COL, LOOKING AT A ", currentmatrix[matrixX + 1][matrixY]);
+      console.log("RIGHT COL, LOOKING AT A ", currentmatrix[matrixX + 1][matrixY], " WHEN CHECKING (",matrixX+1,", ", matrixY,")");
     }
-    if(currentmatrix[matrixX][matrixY + 0] == 1){
+    if(currentmatrix[matrixY +1][matrixX] == 1){
       //set collision to true
       downcollision = true;
-      console.log("DOWN COL, LOOKING AT A ", currentmatrix[matrixX ][matrixY + 1]);
+      console.log("DOWN COL, LOOKING AT A ", currentmatrix[matrixX][matrixY + 1], " WHEN CHECKING (",matrixX,", ", matrixY+1,")");
     }
-    if(currentmatrix[matrixX][matrixY - 1] == 1){
+    if(currentmatrix[matrixY -1][matrixX] == 1){
       //set collision to true
       upcollision = true;
-      console.log("UP COL, LOOKING AT A ", currentmatrix[matrixX][matrixY - 1]);
+      console.log("UP COL, LOOKING AT A ", currentmatrix[matrixX][matrixY - 1], " WHEN CHECKING (",matrixX,", ", matrixY-1,")");
     }
 }
 

@@ -13,7 +13,10 @@ document.addEventListener('keydown', keyPressed, false);
 document.addEventListener('keyup', keyUnpressed, false);
 //players wheravouts in game for making strings
 var playerlocationstr = "level0";
+var level = 0;
 var currentmatrix;
+//inventory
+var keyInv;
 
 //create canvas
 //Width and height for our canvas
@@ -363,9 +366,60 @@ var vortex = sprite({
   curFrame: 0
 })
 
-//function for demon movement
-function demonAI(){
+var wasHere;
+var finalPath;
+var finalPathLen=-1;
+var currentX = (demon.x/36)+1;
+var currentY = (demon.y/36)+1;
+var goalX = (player.x/36)+1;
+var goalY = (player.y/36)+1;
+var marked;
 
+function recursiveAlgorithm(x, y){
+  //if at goal
+      if((x == goalX)&&(y == goalY)){
+        //return current location?
+        return x, y;
+      }
+      else{
+          //if *direction is not a wall and is unmarked
+          //*right
+          if((currentmatrix[x+1][y] != 1) && (marked[x+1][y] == false)){
+                //change location
+                x++;
+                //mark location
+                mark[x][y] = true;
+                //find path from location
+                return recursiveAlgorithm(x, y);
+          }
+          //*left
+          if((currentmatrix[x-1][y] != 1) && (marked[x-1][y] == false)){
+              //change location
+              x--;
+              //mark location
+              mark[x][y] = true;
+              //find path from location
+              return recursiveAlgorithm(x, y);
+          }
+          //*down
+          if((currentmatrix[x][y+1] != 1) && (marked[x][y+1] == false)){
+            //change location
+            y++;
+            //mark location
+            mark[x][y] = true;
+            //find path from location
+            return recursiveAlgorithm(x, y);
+          }
+          //*up
+          if((currentmatrix[x][y-1] != 1) && (marked[x][y-1] == false)){
+            //change location
+            y--;
+            //mark location
+            mark[x][y] = true;
+            //find path from location
+            return recursiveAlgorithm(x, y);
+          }
+      }
 }
 
 function buildlevel(){
@@ -424,6 +478,7 @@ function doorobject(options){
   var that = {};
 
   that.opened = options.opened;
+  that.unlocked = options.unlocked;
   that.x = options.x;
   that.y = options.y;
   that.srcX = options.srcX;
@@ -447,6 +502,7 @@ var door = doorobject({
 
   x: 0,
   y: 0,
+  unlocked:false,
   opened: false,
   srcX:0,
   srcY: 0,
@@ -459,22 +515,27 @@ function keyobject(options){
 
   that.x = options.x;
   that.y = options.y;
+  that.pickedup = options.pickedup;
 
   that.show = function(){
-    l2ctx.drawImage(keyImage, that.x, that.y, 32, 32);
+    if(!that.pickedup){
+      l2ctx.drawImage(keyImage, that.x, that.y, 32, 32);
+    }
+    else{
+      l2ctx.clearRect(that.x,that.y,32,32);
+    }
   }
   return that;
 }
 
 var key = keyobject({
+  pickedup:false,
   x: 0,
   y: 0
 })
 
 //general movement FUNCTION
 function movementUpdate(){
-  //update collisions
-  collisionsUpdate();
   //set lastx and lasty before moving
   player.lastX = player.x;
   player.lastY = player.y;
@@ -503,6 +564,8 @@ function movementUpdate(){
 
 }
 
+ var interact = false;
+
 //for when the arrow keys are pressed
 function keyPressed(event){
   if (event.keyCode == '39')
@@ -521,7 +584,27 @@ function keyPressed(event){
   {
     goUp= true;
   }
+  if (event.keyCode == '68')
+  {
+    goRight=true;
+  }
+  else if (event.keyCode == '65')
+  {
+    goLeft= true;
+  }
+  if (event.keyCode == '83')
+  {
+    goDown= true;
+  }
+  else if (event.keyCode == '87')
+  {
+    goUp= true;
+  }
 
+  else if (event.keyCode == '88'){
+    interact = true;
+    console.log('interact');
+  }
 }
 //for when the keys are let go
 function keyUnpressed(event){
@@ -545,7 +628,31 @@ function keyUnpressed(event){
     goUp= false;
     player.moving = false;
   }
+  if (event.keyCode == '68')
+    {
+    goRight=false;
+    player.moving = false;
+    }
+    else if (event.keyCode == '65')
+    {
+    goLeft= false;
+    player.moving = false;
+  }
+  if (event. keyCode == '83')
+  {
+    goDown= false;
+    player.moving = false;
+  }
+  else if (event. keyCode == '87')
+  {
+    goUp= false;
+    player.moving = false;
+  }
+  if (event. keyCode == '88')
+  {
+    interact= false;
 
+  }
 }
 
 //general collisions FUNCTION
@@ -555,64 +662,104 @@ function collisionsUpdate(){
   rightcollision = false;
   upcollision = false;
   downcollision = false;
+  keycollision = false;
+  doorcollision = false;
+
     //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
-    matrixX = (player.x+16)/36;
+    matrixX = (player.x+32)/36;
     matrixY = (player.y+16)/36;
-
-
     //round values down
       matrixX = Math.floor(matrixX);
       matrixY = Math.floor(matrixY);
       console.log("X = ", matrixX, "Y = ", matrixY);
-
     //set collsisions based on matrix values around player
     if(currentmatrix[matrixY][matrixX-1] == 1){
       //set collision to true
       leftcollision = true;
       console.log("LEFT COL, LOOKING AT A ", currentmatrix[matrixX - 1][matrixY], " WHEN CHECKING (",matrixX-1,", ", matrixY,")");
     }
+    //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
+    matrixX = (player.x)/36;
+    matrixY = (player.y+16)/36;
+    //round values down
+      matrixX = Math.floor(matrixX);
+      matrixY = Math.floor(matrixY);
     if(currentmatrix[matrixY][matrixX+1] == 1){
       //set collision to true
       rightcollision = true;
       console.log("RIGHT COL, LOOKING AT A ", currentmatrix[matrixX + 1][matrixY], " WHEN CHECKING (",matrixX+1,", ", matrixY,")");
     }
+    //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
+    matrixX = (player.x+16)/36;
+    matrixY = (player.y)/36;
+    //round values down
+      matrixX = Math.floor(matrixX);
+      matrixY = Math.floor(matrixY);
     if(currentmatrix[matrixY +1][matrixX] == 1){
       //set collision to true
       downcollision = true;
       console.log("DOWN COL, LOOKING AT A ", currentmatrix[matrixX][matrixY + 1], " WHEN CHECKING (",matrixX,", ", matrixY+1,")");
     }
+    //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
+    matrixX = (player.x+16)/36;
+    matrixY = (player.y+32)/36;
+    //round values down
+      matrixX = Math.floor(matrixX);
+      matrixY = Math.floor(matrixY);
     if(currentmatrix[matrixY -1][matrixX] == 1){
       //set collision to true
       upcollision = true;
       console.log("UP COL, LOOKING AT A ", currentmatrix[matrixX][matrixY - 1], " WHEN CHECKING (",matrixX,", ", matrixY-1,")");
     }
+    //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
+    matrixX = (player.x+16)/36;
+    matrixY = (player.y+16)/36;
+    //round values down
+      matrixX = Math.floor(matrixX);
+      matrixY = Math.floor(matrixY);
+    if(currentmatrix[matrixX][matrixY] == 3 && interact){
+      //set collision to true
+      keycollision = true;
+      console.log("KEY COL");
+      keyInv = true;
+      key.pickedup = true;
+
+      if(keyInv == true){
+        console.log('you got a key');
+      }
+
+      door.unlocked = true;
+    }
+    if(currentmatrix[matrixX][matrixY] == 2 && door.unlocked == true && interact == true){
+      //set collision to true
+      doorcollision = true;
+      console.log("DOOR COL");
+      door.opened = true;
+      keyInv = false;
+      door.unlocked = false;
+    }
 }
 
 //gameloop
 function gameLoop(){
-    //do level player is currently on
-    //playerlocationfunc();
     //set current matrix
-    currentmatrix = level2matrix;
+    currentmatrix = level0matrix;
     //set background
     background();
     //Updating the frame
     player.update();
     //Drawing the player
     player.show();
-    //update demon frame
-    //demon.update();
-    //draw demon
-    //demon.show();
     //build level
     buildlevel();
+    //update collisions
+    collisionsUpdate();
     //update movement
     movementUpdate();
 
 }
 
-
-  //(for movement) if player is not vertically colliding, CAN vertically move, same apps. for horizontally
+//(for movement) if player is not vertically colliding, CAN vertically move, same apps. for horizontally
 
 //set for gameLoop to only occur every 200ms
 setInterval(gameLoop,100);

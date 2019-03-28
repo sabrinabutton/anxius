@@ -57,6 +57,8 @@ var brickImage = new Image();
 brickImage.src = "brick.png";
 var vortexImage = new Image();
 vortexImage.src = "vortex.png";
+var markedImage = new Image();
+markedImage.src = "marker.png";
 
 //matrix for each level
 var level0matrix = [
@@ -332,8 +334,8 @@ var player = sprite({
 var demon = sprite({
 
   context: l1ctx,
-  x: 70,
-  y: 30,
+  x: 36,
+  y: 36,
   moving: true,
   srcX:0,
   srcY: 0,
@@ -366,56 +368,96 @@ var vortex = sprite({
   curFrame: 0
 })
 
-var wasHere;
 var finalPath;
 var finalPathLen=-1;
-var currentX = (demon.x/36)+1;
-var currentY = (demon.y/36)+1;
-var goalX = (player.x/36)+1;
-var goalY = (player.y/36)+1;
-var marked;
+var currentX = (demon.x/36);
+var currentY = (demon.y/36);
+var goalX = (player.x/36);
+var goalY = (player.y/36);
+var marked = [
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+];
+
+
+function solveMaze(){
+  //floor
+  Math.floor(currentX);
+  Math.floor(currentY);
+  //do
+  recursiveAlgorithm(currentX, currentY);
+}
 
 function recursiveAlgorithm(x, y){
+
+  console.log("x is ", x, "y is ", y);
+  //floor
+  Math.floor(goalX);
+  Math.floor(goalY);
+
   //if at goal
       if((x == goalX)&&(y == goalY)){
-        //return current location?
-        return x, y;
+        //solved
+        console.log("SOLVED!");
       }
       else{
           //if *direction is not a wall and is unmarked
           //*right
-          if((currentmatrix[x+1][y] != 1) && (marked[x+1][y] == false)){
+          if((currentmatrix[y][x+1] != 1) && (marked[y][x+1] == 0)){
                 //change location
                 x++;
                 //mark location
-                mark[x][y] = true;
+                marked[y][x] = 1;
                 //find path from location
                 return recursiveAlgorithm(x, y);
           }
           //*left
-          if((currentmatrix[x-1][y] != 1) && (marked[x-1][y] == false)){
+          if((currentmatrix[y][x-1] != 1) && (marked[y][x-1] == 0)){
               //change location
               x--;
               //mark location
-              mark[x][y] = true;
+              marked[y][x] = 1;
               //find path from location
               return recursiveAlgorithm(x, y);
           }
           //*down
-          if((currentmatrix[x][y+1] != 1) && (marked[x][y+1] == false)){
+          if((currentmatrix[y+1][x] != 1) && (marked[y+1][x] == 0)){
             //change location
             y++;
             //mark location
-            mark[x][y] = true;
+            marked[y][x] = 1;
             //find path from location
             return recursiveAlgorithm(x, y);
           }
           //*up
-          if((currentmatrix[x][y-1] != 1) && (marked[x][y-1] == false)){
+          if((currentmatrix[y-1][x] != 1) && (marked[y-1][x] == 0)){
             //change location
             y--;
             //mark location
-            mark[x][y] = true;
+            marked[y][x] = 1;
             //find path from location
             return recursiveAlgorithm(x, y);
           }
@@ -460,6 +502,10 @@ function buildlevel(){
 
         //show
         vortex.show();
+      }
+
+      if(marked[i][j] == 1){
+        l2ctx.drawImage(markedImage, xvalue, yvalue, 36, 36);
       }
 
       xvalue+=36;
@@ -756,10 +802,8 @@ function gameLoop(){
     collisionsUpdate();
     //update movement
     movementUpdate();
-
+    solveMaze();
 }
-
-//(for movement) if player is not vertically colliding, CAN vertically move, same apps. for horizontally
-
 //set for gameLoop to only occur every 200ms
 setInterval(gameLoop,100);
+setInterval(recursiveAlgorithm, 1000)

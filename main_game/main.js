@@ -414,52 +414,70 @@ function solveMaze(){
 function recursiveAlgorithm(x, y){
 
   console.log("x is ", x, "y is ", y);
+  //set goal
+  goalX = (player.x/36);
+  goalY = (player.y/36);
   //floor
-  Math.floor(goalX);
-  Math.floor(goalY);
+  goalX = Math.floor(goalX);
+  goalY = Math.floor(goalY);
 
+ console.log("x = ", x, "GOAL = ", goalX);
   //if at goal
       if((x == goalX)&&(y == goalY)){
         //solved
         console.log("SOLVED!");
+        //set solved true
+        enemysolved = true;
+        return;
       }
+
       else{
-          //if *direction is not a wall and is unmarked
-          //*right
-          if((currentmatrix[y][x+1] != 1) && (marked[y][x+1] == 0)){
+              console.log("RIGHT: x = ",x, "y = ", y);
+          //if direction is not a wall and is unmarked
+          //right
+          console.log("matrix = ",level0matrix[y][x+1]);
+          console.log("marked = ",marked[y][x+1]);
+          if((level0matrix[y][x+1] != 1) && (marked[y][x+1] == 0)){
                 //change location
-                x++;
+                var sendX = x+1;
                 //mark location
-                marked[y][x] = 1;
+                marked[y][sendX] = 1;
+                //console.log("Before Send: x = ", sendX, ", y = ", y);
                 //find path from location
-                return recursiveAlgorithm(x, y);
+                return recursiveAlgorithm(sendX, y);
           }
-          //*left
+          console.log("LEFT: x = ",x, "y = ", y);
+          //left
           if((currentmatrix[y][x-1] != 1) && (marked[y][x-1] == 0)){
               //change location
-              x--;
+              var sendX = x-1;;
               //mark location
-              marked[y][x] = 1;
+              marked[y][sendX] = 1;
+              //console.log("Before Send: x = ", sendX, ", y = ", y);
               //find path from location
-              return recursiveAlgorithm(x, y);
+              return recursiveAlgorithm(sendX, y);
           }
-          //*down
+          console.log("DOWN: x = ",x, "y = ", y);
+          //down
           if((currentmatrix[y+1][x] != 1) && (marked[y+1][x] == 0)){
             //change location
-            y++;
+            var sendY = y+1;
             //mark location
-            marked[y][x] = 1;
+            marked[sendY][x] = 1;
+            //console.log("Before Send: x = ", x, ", y = ", sendY);
             //find path from location
-            return recursiveAlgorithm(x, y);
+            return recursiveAlgorithm(x, sendY);
           }
-          //*up
+          console.log("UP: x = ",x, "y = ", y);
+          //up
           if((currentmatrix[y-1][x] != 1) && (marked[y-1][x] == 0)){
             //change location
-            y--;
+            var sendY = y-1;
             //mark location
-            marked[y][x] = 1;
+            marked[sendY][x] = 1;
             //find path from location
-            return recursiveAlgorithm(x, y);
+            //console.log("Before Send: x = ", x, ", y = ", sendY);
+            return recursiveAlgorithm(x, sendY);
           }
       }
 }

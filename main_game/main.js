@@ -554,8 +554,6 @@ var door = doorobject({
   srcY: 0,
 })
 
-
-
 function keyobject(options){
   var that = {};
 

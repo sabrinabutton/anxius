@@ -334,7 +334,7 @@ var player = sprite({
 var demon = sprite({
 
   context: l1ctx,
-  x: 36,
+  x: 252,
   y: 36,
   moving: true,
   srcX:0,
@@ -368,10 +368,10 @@ var vortex = sprite({
   curFrame: 0
 })
 
-var finalPath;
-var finalPathLen=-1;
-var currentX = (demon.x/36);
-var currentY = (demon.y/36);
+var solved = false;
+var queue = [];
+//var sourceX = (demon.x/36);
+//var sourceY = (demon.y/36);
 var goalX = (player.x/36);
 var goalY = (player.y/36);
 var marked = [
@@ -402,85 +402,145 @@ var marked = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
+function breadthFirstSearch(source){
 
-function solveMaze(){
+  //divide source variable
+  source.x = (source.x/36);
+  source.y = (source.y/36);
+  //floor source variable
+  source.x = Math.floor(source.x);
+  source.y = Math.floor(source.y);
+
+  //if *direction is not a wall and is unmarked
+  console.log("PHASE1: CHECKING X @ ", source.x, ", Y @ ", source.y);
+
+  //add source to queue
+  queue.push(source);
+
+  //while queue isn't empty
+  while((queue.length>0) && (solved == false)){
+    var checking = queue[0];
+
+    //remove CHECKING
+    checking = queue.shift();
+    //if destination is found
+    if((checking.x == goalX) && (checking.y == goalY)){
+      console.log("SOLVED!");
+      solved = true;
+        return checking;
+    }
+    else{
+        //if *direction is not a wall and is unmarked
+        console.log("PHASE2: CHECKING X @ ", checking.x, ", Y @ ", checking.y);
+        //*right
+        if((currentmatrix[checking.y][checking.x+1] != 1) && (marked[checking.y][checking.x+1] == 0)){
+              //change location
+              checking.x++;
+              //mark location
+              marked[checking.y][checking.x] = 1;
+
+              //queue current
+              queue.push(checking);
+        }
+        //*left
+        if((currentmatrix[checking.y][checking.x-1] != 1) && (marked[checking.y][checking.x-1] == 0)){
+              //change location
+              checking.x--;
+              //mark location
+              marked[checking.y][checking.x] = 1;
+              //queue current
+              queue.push(checking);
+        }
+        //*down
+        if((currentmatrix[checking.y+1][checking.x] != 1) && (marked[checking.y+1][checking.x] == 0)){
+              //change location
+              checking.y++;
+              //mark location
+              marked[checking.y][checking.x] = 1;
+              //queue current
+              queue.push(checking);
+        }
+        //*up
+        if((currentmatrix[checking.y-1][checking.x] != 1) && (marked[checking.y-1][checking.x] == 0)){
+          //change location
+          checking.y--;
+          //mark location
+          marked[checking.y][checking.x] = 1;
+          //queue current
+          queue.push(checking);
+        }
+
+      }
+
+    }
+}
+
+
+/*function solveMaze(){
   //floor
-  Math.floor(currentX);
-  Math.floor(currentY);
-  //do
-  recursiveAlgorithm(currentX, currentY);
+  sourceX = Math.floor(sourceX);
+  sourceY = Math.floor(sourceY);
+  //if solved = false
+  if(solved==false){
+    //do
+    recursiveAlgorithm(currentX, currentY);
+  }
+
 }
 
 function recursiveAlgorithm(x, y){
 
-  console.log("x is ", x, "y is ", y);
-  //set goal
-  goalX = (player.x/36);
-  goalY = (player.y/36);
   //floor
   goalX = Math.floor(goalX);
   goalY = Math.floor(goalY);
 
- console.log("x = ", x, "GOAL = ", goalX);
   //if at goal
-      if((x == goalX)&&(y == goalY)){
+      if((x == goalX) && (y == goalY)){
         //solved
         console.log("SOLVED!");
-        //set solved true
-        enemysolved = true;
+        solved = true;
         return;
       }
-
       else{
-              console.log("RIGHT: x = ",x, "y = ", y);
-          //if direction is not a wall and is unmarked
-          //right
-          console.log("matrix = ",level0matrix[y][x+1]);
-          console.log("marked = ",marked[y][x+1]);
-          if((level0matrix[y][x+1] != 1) && (marked[y][x+1] == 0)){
+          //if *direction is not a wall and is unmarked
+          //*right
+          if((currentmatrix[y][x+1] != 1) && (marked[y][x+1] == 0)){
                 //change location
-                var sendX = x+1;
+                x++;
                 //mark location
-                marked[y][sendX] = 1;
-                //console.log("Before Send: x = ", sendX, ", y = ", y);
+                marked[y][x] = 1;
                 //find path from location
-                return recursiveAlgorithm(sendX, y);
+                return recursiveAlgorithm(x, y);
           }
-          console.log("LEFT: x = ",x, "y = ", y);
-          //left
+          //*left
           if((currentmatrix[y][x-1] != 1) && (marked[y][x-1] == 0)){
               //change location
-              var sendX = x-1;;
+              x--;
               //mark location
-              marked[y][sendX] = 1;
-              //console.log("Before Send: x = ", sendX, ", y = ", y);
+              marked[y][x] = 1;
               //find path from location
-              return recursiveAlgorithm(sendX, y);
+              return recursiveAlgorithm(x, y);
           }
-          console.log("DOWN: x = ",x, "y = ", y);
-          //down
+          //*down
           if((currentmatrix[y+1][x] != 1) && (marked[y+1][x] == 0)){
             //change location
-            var sendY = y+1;
+            y++;
             //mark location
-            marked[sendY][x] = 1;
-            //console.log("Before Send: x = ", x, ", y = ", sendY);
+            marked[y][x] = 1;
             //find path from location
-            return recursiveAlgorithm(x, sendY);
+            return recursiveAlgorithm(x, y);
           }
-          console.log("UP: x = ",x, "y = ", y);
-          //up
+          //*up
           if((currentmatrix[y-1][x] != 1) && (marked[y-1][x] == 0)){
             //change location
-            var sendY = y-1;
+            y--;
             //mark location
-            marked[sendY][x] = 1;
+            marked[y][x] = 1;
             //find path from location
-            //console.log("Before Send: x = ", x, ", y = ", sendY);
-            return recursiveAlgorithm(x, sendY);
+            return recursiveAlgorithm(x, y);
           }
       }
-}
+}*/
 
 function buildlevel(){
   //console.log(currentmatrix);
@@ -571,6 +631,8 @@ var door = doorobject({
   srcX:0,
   srcY: 0,
 })
+
+
 
 function keyobject(options){
   var that = {};
@@ -818,8 +880,10 @@ function gameLoop(){
     collisionsUpdate();
     //update movement
     movementUpdate();
-    solveMaze();
+
+    //if *direction is not a wall and is unmarked
+    console.log("PRIME: CHECKING X @ ", demon.x, ", Y @ ", demon.y);
+    breadthFirstSearch(demon);
 }
 //set for gameLoop to only occur every 200ms
 setInterval(gameLoop,100);
-setInterval(recursiveAlgorithm, 1000)

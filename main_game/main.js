@@ -16,7 +16,7 @@ var playerlocationstr = "level0";
 var level = 0;
 var currentmatrix;
 //inventory
-var keyInv;
+var keyInv = [false,false,false];
 
 //create canvas
 //Width and height for our canvas
@@ -43,6 +43,8 @@ layer3.width = canvasWidth;
 layer3.height = canvasHeight;
 //Establishing a context to the canvas
 var l3ctx = layer3.getContext("2d");
+
+
 
 //importing graphics
 var maincharacterImage = new Image();
@@ -333,7 +335,7 @@ var player = sprite({
 
 var demon = sprite({
 
-  context: l1ctx,
+  context: l2ctx,
   x: 252,
   y: 36,
   moving: true,
@@ -368,12 +370,15 @@ var vortex = sprite({
   curFrame: 0
 })
 
-var solved = false;
-var queue = [];
-//var sourceX = (demon.x/36);
-//var sourceY = (demon.y/36);
-var goalX = (player.x/36);
-var goalY = (player.y/36);
+function QItem(y,x, dist){
+
+  this.x = x;
+  this.y = y;
+  this.dist = dist;
+}
+
+var enemySource = new QItem(0, 0, 0);
+
 var marked = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -401,146 +406,186 @@ var marked = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
+var queue = [];
+var solved = false;
+var goalX = (player.x/36);
+var goalY = (player.y/36);
+//var shortestPath = [];
 
 function breadthFirstSearch(source){
+  //reset
+  marked = [
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ ];
+  queue = [];
+  solved = false;
+  goalX = (player.x/36);
+  goalY = (player.y/36);
+
 
   //divide source variable
   source.x = (source.x/36);
   source.y = (source.y/36);
+  source.dist = 0;
   //floor source variable
   source.x = Math.floor(source.x);
   source.y = Math.floor(source.y);
 
-  //if *direction is not a wall and is unmarked
-  console.log("PHASE1: CHECKING X @ ", source.x, ", Y @ ", source.y);
-
-  //add source to queue
-  queue.push(source);
-
-  //while queue isn't empty
-  while((queue.length>0) && (solved == false)){
-    var checking = queue[0];
-
-    //remove CHECKING
-    checking = queue.shift();
-    //if destination is found
-    if((checking.x == goalX) && (checking.y == goalY)){
-      console.log("SOLVED!");
-      solved = true;
-        return checking;
-    }
-    else{
-        //if *direction is not a wall and is unmarked
-        console.log("PHASE2: CHECKING X @ ", checking.x, ", Y @ ", checking.y);
-        //*right
-        if((currentmatrix[checking.y][checking.x+1] != 1) && (marked[checking.y][checking.x+1] == 0)){
-              //change location
-              checking.x++;
-              //mark location
-              marked[checking.y][checking.x] = 1;
-
-              //queue current
-              queue.push(checking);
-        }
-        //*left
-        if((currentmatrix[checking.y][checking.x-1] != 1) && (marked[checking.y][checking.x-1] == 0)){
-              //change location
-              checking.x--;
-              //mark location
-              marked[checking.y][checking.x] = 1;
-              //queue current
-              queue.push(checking);
-        }
-        //*down
-        if((currentmatrix[checking.y+1][checking.x] != 1) && (marked[checking.y+1][checking.x] == 0)){
-              //change location
-              checking.y++;
-              //mark location
-              marked[checking.y][checking.x] = 1;
-              //queue current
-              queue.push(checking);
-        }
-        //*up
-        if((currentmatrix[checking.y-1][checking.x] != 1) && (marked[checking.y-1][checking.x] == 0)){
-          //change location
-          checking.y--;
-          //mark location
-          marked[checking.y][checking.x] = 1;
-          //queue current
-          queue.push(checking);
-        }
-
-      }
-
-    }
-}
-
-
-/*function solveMaze(){
-  //floor
-  sourceX = Math.floor(sourceX);
-  sourceY = Math.floor(sourceY);
-  //if solved = false
-  if(solved==false){
-    //do
-    recursiveAlgorithm(currentX, currentY);
-  }
-
-}
-
-function recursiveAlgorithm(x, y){
-
-  //floor
   goalX = Math.floor(goalX);
   goalY = Math.floor(goalY);
 
-  //if at goal
-      if((x == goalX) && (y == goalY)){
-        //solved
-        console.log("SOLVED!");
-        solved = true;
-        return;
-      }
-      else{
-          //if *direction is not a wall and is unmarked
-          //*right
-          if((currentmatrix[y][x+1] != 1) && (marked[y][x+1] == 0)){
-                //change location
-                x++;
-                //mark location
-                marked[y][x] = 1;
-                //find path from location
-                return recursiveAlgorithm(x, y);
-          }
-          //*left
-          if((currentmatrix[y][x-1] != 1) && (marked[y][x-1] == 0)){
-              //change location
-              x--;
-              //mark location
-              marked[y][x] = 1;
-              //find path from location
-              return recursiveAlgorithm(x, y);
-          }
-          //*down
-          if((currentmatrix[y+1][x] != 1) && (marked[y+1][x] == 0)){
-            //change location
-            y++;
-            //mark location
-            marked[y][x] = 1;
-            //find path from location
-            return recursiveAlgorithm(x, y);
-          }
-          //*up
-          if((currentmatrix[y-1][x] != 1) && (marked[y-1][x] == 0)){
-            //change location
-            y--;
-            //mark location
-            marked[y][x] = 1;
-            //find path from location
-            return recursiveAlgorithm(x, y);
-          }
-      }
-}*/
+  //add source to queue
+  queue.push(source);
+  marked[source.y][source.x] = 1;
+
+  //while queue isn't empty
+  while((queue.length>0) && (solved == false)){
+
+            //console.log("QUEUE LENGTH: ", queue.length);
+
+            //console.log("LOOP NO. : ", loopcounter)
+
+            var checking = queue.shift();
+          //  shortestPath.push(queue.pop());
+
+            //increase checking distance by 1;
+            checking.dist+=1;
+            //console.log("MUST SEARCH: ", queue);
+
+
+            //if destination is found
+            if((checking.x == goalX) && (checking.y == goalY)){
+                console.log("SOLVED! Distance is ", checking.dist);
+                //console.log("shortestPath: ", shortestPath);
+                solved = true;
+                return checking.dist;
+            }
+
+            else{
+                //*right
+                if((currentmatrix[checking.y][checking.x+1] != 1) && (marked[checking.y][checking.x+1] == 0)){
+                      //console.log("Checking RIGHT from x: ", checking.x, " and y: ", checking.y);
+                      //console.log("Current distance is ", checking.dist);
+
+                      marked[checking.y][checking.x+1] = 1;
+
+                      var newItem = new QItem(checking.y, checking.x+1, checking.dist);
+                      //queue current
+                      queue.push(newItem);
+                }
+                //*left
+                if((currentmatrix[checking.y][checking.x-1] != 1) && (marked[checking.y][checking.x-1] == 0)){
+                    //console.log("Checking LEFT from x: ", checking.x, " and y: ", checking.y);
+                    //console.log("Current distance is ", checking.dist);
+
+                      marked[checking.y][checking.x-1] = 1;
+
+                      var newItem = new QItem(checking.y, checking.x-1, checking.dist);
+                      //queue current
+                      queue.push(newItem);
+                }
+                //*down
+                if((currentmatrix[checking.y+1][checking.x] != 1) && (marked[checking.y+1][checking.x] == 0)){
+                    //console.log("Checking DOWN from x: ", checking.x, " and y: ", checking.y);
+                    //console.log("Current distance is ", checking.dist);
+
+                      marked[checking.y+1][checking.x] = 1;
+
+                      var newItem = new QItem(checking.y+1, checking.x, checking.dist);
+                      //queue current
+                      queue.push(newItem);
+
+                }
+                //*up
+                if((currentmatrix[checking.y-1][checking.x] != 1) && (marked[checking.y-1][checking.x] == 0)){
+                    //console.log("Checking UP from x: ", checking.x, " and y: ", checking.y);
+                    //console.log("Current distance is ", checking.dist);
+
+                    marked[checking.y-1][checking.x] = 1;
+
+                    var newItem = new QItem(checking.y-1, checking.x, checking.dist);
+                    //queue current
+                    queue.push(newItem);
+                }
+
+              }
+
+    }
+}
+
+
+function demonAIinterpret(){
+  var followPath = marked;
+  var demonMatrixX = demon.x/36;
+  var demonMatrixY = demon.y/36;
+  var speed = 4;
+
+  demonMatrixX = Math.floor(demonMatrixX);
+  demonMatrixY = Math.floor(demonMatrixY);
+  demon.lastX= demon.x;
+  demon.lastY= demon.y;
+  //set here to visited on path
+  followPath[demonMatrixY][demonMatrixX] = 0;
+  //if on goal
+  if((demonMatrixX==goalX)&&(demonMatrixY==goalY)){
+    speed = 10;
+  }
+  //use marked to move
+    //right
+    if(followPath[demonMatrixY][demonMatrixX+1] == 1){
+      console.log("demon move right");
+
+      demon.moving = true;
+      demon.x+=speed;
+    }
+    //left
+    else if(followPath[demonMatrixY][demonMatrixX-1] == 1){
+      console.log("demon move left");
+      demon.moving = true;
+      demon.x-=speed;
+    }
+    //up
+    else if(followPath[demonMatrixY-1][demonMatrixX] == 1){
+      console.log("demon move up");
+      demon.moving = true;
+      demon.y-=speed;
+    }
+    //down
+    else if(followPath[demonMatrixY+1][demonMatrixX] == 1){
+      console.log("demon move down");
+      demon.moving = true;
+      demon.y+=speed;
+    }
+    else{
+      console.log("demon cant move");
+      demon.moving = false;
+    }
+      console.log("ADJACENTS: R = ",followPath[demonMatrixY][demonMatrixX+1], ", L = ", marked[demonMatrixY][demonMatrixX-1], ", U = ",  marked[demonMatrixY-1][demonMatrixX], ", D = ", marked[demonMatrixY+1][demonMatrixX]);
+}
 
 function buildlevel(){
   //console.log(currentmatrix);
@@ -583,7 +628,7 @@ function buildlevel(){
       }
 
       if(marked[i][j] == 1){
-        l2ctx.drawImage(markedImage, xvalue, yvalue, 36, 36);
+       l2ctx.drawImage(markedImage, xvalue, yvalue, 36, 36);
       }
 
       xvalue+=36;
@@ -653,6 +698,16 @@ function keyobject(options){
 }
 
 var key = keyobject({
+  pickedup:false,
+  x: 0,
+  y: 0
+})
+var key2 = keyobject({
+  pickedup:false,
+  x: 0,
+  y: 0
+})
+var key3 = keyobject({
   pickedup:false,
   x: 0,
   y: 0
@@ -795,12 +850,12 @@ function collisionsUpdate(){
     //round values down
       matrixX = Math.floor(matrixX);
       matrixY = Math.floor(matrixY);
-      console.log("X = ", matrixX, "Y = ", matrixY);
+      //console.log("X = ", matrixX, "Y = ", matrixY);
     //set collsisions based on matrix values around player
     if(currentmatrix[matrixY][matrixX-1] == 1){
       //set collision to true
       leftcollision = true;
-      console.log("LEFT COL, LOOKING AT A ", currentmatrix[matrixX - 1][matrixY], " WHEN CHECKING (",matrixX-1,", ", matrixY,")");
+      //console.log("LEFT COL, LOOKING AT A ", currentmatrix[matrixX - 1][matrixY], " WHEN CHECKING (",matrixX-1,", ", matrixY,")");
     }
     //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
     matrixX = (player.x)/36;
@@ -811,7 +866,7 @@ function collisionsUpdate(){
     if(currentmatrix[matrixY][matrixX+1] == 1){
       //set collision to true
       rightcollision = true;
-      console.log("RIGHT COL, LOOKING AT A ", currentmatrix[matrixX + 1][matrixY], " WHEN CHECKING (",matrixX+1,", ", matrixY,")");
+      //console.log("RIGHT COL, LOOKING AT A ", currentmatrix[matrixX + 1][matrixY], " WHEN CHECKING (",matrixX+1,", ", matrixY,")");
     }
     //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
     matrixX = (player.x+16)/36;
@@ -822,7 +877,7 @@ function collisionsUpdate(){
     if(currentmatrix[matrixY +1][matrixX] == 1){
       //set collision to true
       downcollision = true;
-      console.log("DOWN COL, LOOKING AT A ", currentmatrix[matrixX][matrixY + 1], " WHEN CHECKING (",matrixX,", ", matrixY+1,")");
+      //console.log("DOWN COL, LOOKING AT A ", currentmatrix[matrixX][matrixY + 1], " WHEN CHECKING (",matrixX,", ", matrixY+1,")");
     }
     //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
     matrixX = (player.x+16)/36;
@@ -833,7 +888,7 @@ function collisionsUpdate(){
     if(currentmatrix[matrixY -1][matrixX] == 1){
       //set collision to true
       upcollision = true;
-      console.log("UP COL, LOOKING AT A ", currentmatrix[matrixX][matrixY - 1], " WHEN CHECKING (",matrixX,", ", matrixY-1,")");
+      //console.log("UP COL, LOOKING AT A ", currentmatrix[matrixX][matrixY - 1], " WHEN CHECKING (",matrixX,", ", matrixY-1,")");
     }
     //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
     matrixX = (player.x+16)/36;
@@ -845,7 +900,7 @@ function collisionsUpdate(){
       //set collision to true
       keycollision = true;
       console.log("KEY COL");
-      keyInv = true;
+      keyInv[0] = true;
       key.pickedup = true;
 
       if(keyInv == true){
@@ -867,13 +922,15 @@ function collisionsUpdate(){
 //gameloop
 function gameLoop(){
     //set current matrix
-    currentmatrix = level0matrix;
+    currentmatrix = level2matrix;
     //set background
     background();
     //Updating the frame
     player.update();
     //Drawing the player
     player.show();
+    demon.update();
+    demon.show();
     //build level
     buildlevel();
     //update collisions
@@ -881,9 +938,13 @@ function gameLoop(){
     //update movement
     movementUpdate();
 
-    //if *direction is not a wall and is unmarked
-    console.log("PRIME: CHECKING X @ ", demon.x, ", Y @ ", demon.y);
-    breadthFirstSearch(demon);
+    //set enemy source to demon attributes
+    enemySource.x = demon.x;
+    enemySource.y = demon.y;
+    //send
+    breadthFirstSearch(enemySource);
+
+  //  demonAIinterpret();
 }
 //set for gameLoop to only occur every 200ms
 setInterval(gameLoop,100);

@@ -14,7 +14,6 @@ document.addEventListener('keyup', keyUnpressed, false);
 //players wheravouts in game for making strings
 var playerlocationstr = "level0";
 var level = 0;
-var currentmatrix;
 var noOfEnemy = 0;
 //inventory
 
@@ -80,6 +79,8 @@ var emptyInventory = new Image();
 emptyInventory.src = "emptyinventory.png";
 var saviourImage = new Image();
 saviourImage.src = "hero.png";
+var message = new Image();
+message.src = "textEnd.png";
 
 var followPath = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -136,7 +137,7 @@ var level0matrix = [
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-]
+];
 //matrix for each level
 var level1matrix = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -164,7 +165,7 @@ var level1matrix = [
     [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-]
+];
 //matrix for each level
 var level2matrix = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -192,7 +193,7 @@ var level2matrix = [
   [1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 3, 0, 0, 1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 5, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-]
+];
 //matrix for each level
 var level3matrix1 = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -220,7 +221,7 @@ var level3matrix1 = [
     [1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-]
+];
 //matrix for each level
 var level3matrix2 = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -248,7 +249,7 @@ var level3matrix2 = [
     [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-]
+];
 //matrix for each level
 var level4matrix = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -276,35 +277,34 @@ var level4matrix = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-]
-
-var testmatrix = [
-    [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+];
+var level4matrix2 = [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-]
+];
 
 //set background function
 function background(){
@@ -382,8 +382,8 @@ var player = sprite({
 
 var saviour = sprite({
   context: l3ctx,
-  x: 0,
-  y: 0,
+  x: 36,
+  y: 180,
   moving: false,
   srcX:0,
   srcY: 0,
@@ -400,7 +400,7 @@ var saviour = sprite({
 
 var demon1 = sprite({
 
-  context: l3ctx,
+  context: l2ctx,
   x: 0,
   y: 0,
   moving: true,
@@ -419,7 +419,7 @@ var demon1 = sprite({
 
 var demon2 = sprite({
 
-  context: l3ctx,
+  context: l2ctx,
   x: 0,
   y: 0,
   moving: true,
@@ -438,7 +438,7 @@ var demon2 = sprite({
 
 var demon3 = sprite({
 
-  context: l3ctx,
+  context: l2ctx,
   x: 0,
   y: 0,
   moving: true,
@@ -456,7 +456,7 @@ var demon3 = sprite({
 })
 
 var vortex = sprite({
-  context: l2ctx,
+  context: l1ctx,
   x: 0,
   y: 0,
   moving: true,
@@ -964,6 +964,37 @@ var door = doorobject({
   srcY: 0,
 })
 
+var life=3;
+
+function heartobject(options){
+  var that = {};
+  that.x = options.x;
+  that.y = options.y;
+
+  that.show=function(){
+    console.log("printed!");
+      l4ctx.drawImage(heart, that.x, that.y, 36, 36);
+  }
+  that.clear = function(){
+     l4ctx.drawImage(emptyHeart, that.x, that.y, 36, 36);
+  }
+  return that;
+}
+
+var heart1 = heartobject({
+  x: 904,
+  y: 30
+})
+
+var heart2 = heartobject({
+  x: 940,
+  y: 30
+})
+var heart3 = heartobject({
+  x: 976,
+  y: 30
+})
+
 function keyobject(options){
   var that = {};
 
@@ -990,23 +1021,23 @@ var key1 = keyobject({
   pickedup:false,
   x: 0,
   y: 0,
-  invX: 4,
-  invY: 40
+  invX: 904,
+  invY: 66
 
 })
 var key2 = keyobject({
   pickedup:false,
   x: 0,
   y: 0,
-  invX:40,
-  invY: 40
+  invX:940,
+  invY: 66
 })
 var key3 = keyobject({
   pickedup:false,
   x: 0,
   y: 0,
-  invX:80,
-  invY: 40
+  invX:976,
+  invY: 66
 })
 
 //general movement FUNCTION
@@ -1229,9 +1260,45 @@ function collisionsUpdate(){
 
             }
 
-            if((keyInv1==true)&&(keyInv2==true)&&(keyInv3==true)){
-              door.unlocked = true;
+            if(currentmatrix == level0matrix){
+              if(keyInv1 == true){
+                door.unlocked = true;
+              }
             }
+            if(currentmatrix == level1matrix){
+              if(keyInv1 == true){
+                door.unlocked = true;
+              }
+            }
+            if(currentmatrix == level2matrix){
+              if((keyInv1==true)&&(keyInv2==true)&&(keyInv3==true)){
+
+                door.unlocked = true;
+
+              }
+            }
+
+              var thisdemonMatrixX = demon1.x/36;
+              var thisdemonMatrixY = demon1.y/36;
+              thisdemonMatrixX = Math.floor(thisdemonMatrixX);
+              thisdemonMatrixY = Math.floor(thisdemonMatrixY);
+            if((matrixX == thisdemonMatrixX)&&(matrixY == thisdemonMatrixY)){
+              life-=1;
+            }
+            var thisdemonMatrixX = demon2.x/36;
+            var thisdemonMatrixY = demon2.y/36;
+            thisdemonMatrixX = Math.floor(thisdemonMatrixX);
+            thisdemonMatrixY = Math.floor(thisdemonMatrixY);
+          if((matrixX == thisdemonMatrixX)&&(matrixY == thisdemonMatrixY)){
+            life-=1;
+          }
+          var thisdemonMatrixX = demon3.x/36;
+          var thisdemonMatrixY = demon3.y/36;
+          thisdemonMatrixX = Math.floor(thisdemonMatrixX);
+          thisdemonMatrixY = Math.floor(thisdemonMatrixY);
+        if((matrixX == thisdemonMatrixX)&&(matrixY == thisdemonMatrixY)){
+          life-=1;
+        }
 
     if(currentmatrix[matrixX][matrixY] == 2 && door.unlocked == true && interact == true){
       //set collision to true
@@ -1245,22 +1312,119 @@ function collisionsUpdate(){
 
 //function for last level
 function endGame(){
+  if(saviour.x!=door.x){
+    l2ctx.drawImage(message, 72,180, 216, 12);
+    saviour.x += 1;
+    saviour.lastX = saviour.x;
+
+    saviour.update();
+    saviour.show();
+
+  }
+
+  else{
+    console.log("GOT HERE!");
+
+    door.opened = true;
+
+    currentmatrix = level4matrix2;
+    l1ctx.clearRect(36, 144, 36, 36);
+    l1ctx.clearRect(72, 144, 36, 36);
+    l1ctx.clearRect(108, 144, 36, 36);
+    l1ctx.clearRect(144, 144, 36, 36);
+    l1ctx.clearRect(144, 36, 36, 36);
+    l1ctx.clearRect(144, 72, 36, 36);
+    l1ctx.clearRect(144, 108, 36, 36);
+    l3ctx.clearRect(36,180, 180,36);
+
+
+  }
 
 }
 
 var counter = 0;
 
+var currentmatrix = level4matrix;
+function switcher(){
+  if(door.opened == true && currentmatrix == level0matrix){
+    currentmatrix = level1matrix;
+    door.opened = false;
+    keyInv1 = false;
+    keyInv2 = false;
+    keyInv3 = false;
+    door.unlocked = false;
+    player.x = 36;
+    player.y = 36;
+  }
+  if(door.opened == true && currentmatrix == level1matrix){
+    currentmatrix = level2matrix;
+    door.opened = false;
+    keyInv1 = false;
+    keyInv2 = false;
+    keyInv3 = false;
+    door.unlocked = false;
+    player.x = 36;
+    player.y = 36;
+  }
+  if(door.opened == true && currentmatrix == level2matrix){
+    currentmatrix = level3matrix1;
+    door.opened = false;
+    keyInv1 = false;
+    keyInv2 = false;
+    keyInv3 = false;
+    door.unlocked = false;
+    player.x = 36;
+    player.y = 36;
+}
+if(door.opened == true && currentmatrix == level3matrix1){
+  currentmatrix = level3matrix2;
+  door.opened = false;
+  keyInv1 = false;
+  keyInv2 = false;
+  keyInv3 = false;
+  door.unlocked = false;
+  player.x = 36;
+  player.y = 36;
+}
+if(door.opened == true && currentmatrix == level3matrix2){
+  currentmatrix = level4matrix;
+  door.opened = false;
+  keyInv1 = false;
+  keyInv2 = false;
+  keyInv3 = false;
+  door.unlocked = false;
+  player.x = 36;
+  player.y = 36;
+}
+}
+
+
 //gameloop
 function gameLoop(){
-  counter+=1;
-    //set current matrix
-    currentmatrix = level2matrix;
+    counter+=1;
     //set background
     background();
     //Updating the frame
     player.update();
     //Drawing the player
     player.show();
+
+    console.log("life is ", life);
+    if(life == 1){
+      heart1.show();
+    heart2.clear();
+    heart3.clear();
+    }
+    if (life == 2){
+      heart1.show();
+      heart2.show();
+      heart3.clear();
+    }
+    if (life == 3){
+      heart1.show();
+      heart2.show();
+      heart3.show();
+    }
 
     //build level
     buildlevel();
@@ -1269,23 +1433,33 @@ function gameLoop(){
     //update movement
     movementUpdate();
 
-    if((counter%6) == 0){
+    if((counter%6) == 0 && currentmatrix == level2matrix || currentmatrix == level3matrix1 || currentmatrix == level3matrix2){
+
       //set enemy source to demon attributes
+
       enemySource.x = demon1.x;
+
       enemySource.y = demon1.y;
+
       //send
       breadthFirstSearch(enemySource);
 
       demonAIinterpret(demon1);
 
       //set enemy source to demon attributes
+
       enemySource.x = demon2.x;
+
       enemySource.y = demon2.y;
+
       //send
+
       breadthFirstSearch(enemySource);
+
       demonAIinterpret(demon2);
 
       //set enemy source to demon attributes
+
       enemySource.x = demon3.x;
       enemySource.y = demon3.y;
       //send
@@ -1293,13 +1467,19 @@ function gameLoop(){
       demonAIinterpret(demon3);
 
       demonSpawn();
+
     }
 
+    //var gameFinished = false;
 
-      if (currentlevel == level4matrix){
-
+      if (currentmatrix == level4matrix){
+        //sleep(4000);
+          setInterval(endGame,300)
+          //gameFinished = true;
+          console.log("Matrix is now: ", currentmatrix);
       }
 
 }
-//set for gameLoop to only occur every 200ms
+//set for gameLoop to only occur every 100ms
 setInterval(gameLoop,100);
+

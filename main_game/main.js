@@ -21,6 +21,28 @@ var keyInv1 = false;
 var keyInv2 = false;
 var keyInv3 = false;
 
+var goRight=false;
+var goLeft=false;
+var goUp=false;
+var goDown=false;
+//collision variables
+var leftcollision = false;
+var rightcollision = false;
+var upcollision = false;
+var downcollision = false;
+//tell computer what keydown and keyup mean
+document.addEventListener('keydown', keyPressed, false);
+document.addEventListener('keyup', keyUnpressed, false);
+//players wheravouts in game for making strings
+var playerlocationstr = "level0";
+var level = 0;
+var noOfEnemy = 0;
+//inventory
+
+var keyInv1 = false;
+var keyInv2 = false;
+var keyInv3 = false;
+
 //create canvas
 //Width and height for our canvas
 var canvasWidth = 900;
@@ -81,6 +103,31 @@ var saviourImage = new Image();
 saviourImage.src = "hero.png";
 var message = new Image();
 message.src = "textEnd.png";
+
+function soundFX(src) {
+  this.sound = document.createElement("audio");
+  this.sound.src = src;
+  this.sound.setAttribute("preload", "auto");
+  this.sound.setAttribute("controls", "none");
+  this.sound.style.display = "none";
+  document.body.appendChild(this.sound);
+  this.play = function(){
+    this.sound.play();
+  }
+  this.stop = function(){
+    this.sound.pause();
+  }
+}
+
+var keySound = new soundFX("keyPickup.mp3");
+var doorSound = new soundFX("doorOpen.mp3");
+
+var bgm1 = new soundFX("liar.mp3");
+var bgm2 = new soundFX("null.mp3");;
+var bgm3 = new soundFX("alone.mp3");
+var bgm4 = new soundFX("pain.mp3");
+var bgm5 = new soundFX("witch.mp3");
+var bgm6 = new soundFX("sociopath.mp3");
 
 var followPath = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -982,16 +1029,16 @@ function heartobject(options){
 }
 
 var heart1 = heartobject({
-  x: 904,
+  x: 4,
   y: 30
 })
 
 var heart2 = heartobject({
-  x: 940,
+  x: 40,
   y: 30
 })
 var heart3 = heartobject({
-  x: 976,
+  x: 76,
   y: 30
 })
 
@@ -1021,7 +1068,7 @@ var key1 = keyobject({
   pickedup:false,
   x: 0,
   y: 0,
-  invX: 904,
+  invX: 4,
   invY: 66
 
 })
@@ -1029,14 +1076,14 @@ var key2 = keyobject({
   pickedup:false,
   x: 0,
   y: 0,
-  invX:940,
+  invX:40,
   invY: 66
 })
 var key3 = keyobject({
   pickedup:false,
   x: 0,
   y: 0,
-  invX:976,
+  invX:76,
   invY: 66
 })
 
@@ -1230,6 +1277,7 @@ function collisionsUpdate(){
               console.log("KEY COL");
               keyInv1 = true;
               key1.pickedup = true;
+              keySound.play();
 
               if(keyInv1 == true){
                 console.log('you got a key');
@@ -1242,6 +1290,7 @@ function collisionsUpdate(){
                 console.log("KEY COL");
                 keyInv2 = true;
                 key2.pickedup = true;
+                keySound.play();
 
                 if(keyInv2 == true){
                   console.log('you got a key');
@@ -1253,6 +1302,7 @@ function collisionsUpdate(){
                   console.log("KEY COL");
                   keyInv3 = true;
                   key3.pickedup = true;
+                  keySound.play();
 
                   if(keyInv3 == true){
                     console.log('you got a key');
@@ -1303,6 +1353,7 @@ function collisionsUpdate(){
     if(currentmatrix[matrixX][matrixY] == 2 && door.unlocked == true && interact == true){
       //set collision to true
       doorcollision = true;
+      doorSound.play();
       console.log("DOOR COL");
       door.opened = true;
       keyInv = false;
@@ -1345,62 +1396,82 @@ function endGame(){
 var counter = 0;
 
 var currentmatrix = level0matrix;
+var currentmatrix = level0matrix;
+
+bgm1.play();
 function switcher(){
-  if(door.opened == true && currentmatrix == level0matrix){
-    currentmatrix = level1matrix;
-    door.opened = false;
-    keyInv1 = false;
-    keyInv2 = false;
-    keyInv3 = false;
-    key1.pickedup = false;
-    key2.pickedup = false;
-    key3.pickedup = false;
-    door.unlocked = false;
-    player.x = 36;
-    player.y = 36;
-    l2ctx.clearRect(0, 0, 900, 900);
-  }
-  if(door.opened == true && currentmatrix == level1matrix){
-    currentmatrix = level2matrix;
-    door.opened = false;
-    keyInv1 = false;
-    keyInv2 = false;
-    keyInv3 = false;
-    door.unlocked = false;
-    player.x = 36;
-    player.y = 36;
-  }
-  if(door.opened == true && currentmatrix == level2matrix){
-    currentmatrix = level3matrix1;
-    door.opened = false;
-    keyInv1 = false;
-    keyInv2 = false;
-    keyInv3 = false;
-    door.unlocked = false;
-    player.x = 36;
-    player.y = 36;
+          if(door.opened == true && currentmatrix == level0matrix){
+            currentmatrix = level1matrix;
+            door.opened = false;
+            keyInv1 = false;
+            keyInv2 = false;
+            keyInv3 = false;
+            key1.pickedup = false;
+            key2.pickedup = false;
+            key3.pickedup = false;
+            door.unlocked = false;
+            player.x = 36;
+            player.y = 36;
+            l2ctx.clearRect(0, 0, 900, 900);
+            bgm1.stop();
+
+            bgm2.play();
+          }
+          if(door.opened == true && currentmatrix == level1matrix){
+            currentmatrix = level2matrix;
+            door.opened = false;
+            keyInv1 = false;
+            keyInv2 = false;
+            keyInv3 = false;
+            door.unlocked = false;
+            player.x = 36;
+            player.y = 36;
+            bgm2.stop();
+
+            bgm3.play();
+          }
+          if(door.opened == true && currentmatrix == level2matrix){
+            currentmatrix = level3matrix1;
+            door.opened = false;
+            keyInv1 = false;
+            keyInv2 = false;
+            keyInv3 = false;
+            door.unlocked = false;
+            player.x = 36;
+            player.y = 36;
+            bgm3.stop();
+
+            bgm4.play();
+        }
+        if(door.opened == true && currentmatrix == level3matrix1){
+          currentmatrix = level3matrix2;
+          door.opened = false;
+          keyInv1 = false;
+          keyInv2 = false;
+          keyInv3 = false;
+          door.unlocked = false;
+          player.x = 36;
+          player.y = 36;
+          bgm4.stop();
+
+          bgm5.play();
+        }
+        if(door.opened == true && currentmatrix == level3matrix2){
+          currentmatrix = level4matrix;
+          door.opened = false;
+          keyInv1 = false;
+          keyInv2 = false;
+          keyInv3 = false;
+          door.unlocked = false;
+          player.x = 36;
+          player.y = 36;
+          bgm5.stop();
+
+          bgm6.play();
+        }
+
 }
-if(door.opened == true && currentmatrix == level3matrix1){
-  currentmatrix = level3matrix2;
-  door.opened = false;
-  keyInv1 = false;
-  keyInv2 = false;
-  keyInv3 = false;
-  door.unlocked = false;
-  player.x = 36;
-  player.y = 36;
-}
-if(door.opened == true && currentmatrix == level3matrix2){
-  currentmatrix = level4matrix;
-  door.opened = false;
-  keyInv1 = false;
-  keyInv2 = false;
-  keyInv3 = false;
-  door.unlocked = false;
-  player.x = 36;
-  player.y = 36;
-}
-}
+
 
 
 //gameloop
@@ -1438,7 +1509,7 @@ function gameLoop(){
     //update movement
     movementUpdate();
 
-    if((counter%6) == 0 && currentmatrix == level2matrix || currentmatrix == level3matrix1 || currentmatrix == level3matrix2){
+    if(((counter%6) == 0) && (currentmatrix == level2matrix || currentmatrix == level3matrix1 || currentmatrix == level3matrix2)){
 
       //set enemy source to demon attributes
 
@@ -1487,3 +1558,4 @@ function gameLoop(){
 }
 //set for gameLoop to only occur every 100ms
 setInterval(gameLoop,100);
+

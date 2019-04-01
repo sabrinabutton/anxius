@@ -161,7 +161,7 @@ var level1matrix = [
     [1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
-    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 0, 1],
     [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
@@ -1344,7 +1344,7 @@ function endGame(){
 
 var counter = 0;
 
-var currentmatrix = level4matrix;
+var currentmatrix = level0matrix;
 function switcher(){
   if(door.opened == true && currentmatrix == level0matrix){
     currentmatrix = level1matrix;
@@ -1352,9 +1352,13 @@ function switcher(){
     keyInv1 = false;
     keyInv2 = false;
     keyInv3 = false;
+    key1.pickedup = false;
+    key2.pickedup = false;
+    key3.pickedup = false;
     door.unlocked = false;
     player.x = 36;
     player.y = 36;
+    l2ctx.clearRect(0, 0, 900, 900);
   }
   if(door.opened == true && currentmatrix == level1matrix){
     currentmatrix = level2matrix;
@@ -1402,6 +1406,7 @@ if(door.opened == true && currentmatrix == level3matrix2){
 //gameloop
 function gameLoop(){
     counter+=1;
+    switcher();
     //set background
     background();
     //Updating the frame
@@ -1482,4 +1487,3 @@ function gameLoop(){
 }
 //set for gameLoop to only occur every 100ms
 setInterval(gameLoop,100);
-

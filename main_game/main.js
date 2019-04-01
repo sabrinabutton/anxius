@@ -1,4 +1,4 @@
-//directional variables
+
 var goRight=false;
 var goLeft=false;
 var goUp=false;
@@ -55,8 +55,6 @@ layer4.height = 100;
 //Establishing a context to the canvas
 var l4ctx = layer4.getContext("2d");
 
-
-
 //importing graphics
 var maincharacterImage = new Image();
 maincharacterImage.src = "playersprite.png";
@@ -80,6 +78,8 @@ var keyInventory = new Image();
 keyInventory.src = "keyinventory.png";
 var emptyInventory = new Image();
 emptyInventory.src = "emptyinventory.png";
+var saviourImage = new Image();
+saviourImage.src = "hero.png";
 
 var followPath = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -380,11 +380,29 @@ var player = sprite({
   curFrame: 0
 })
 
-/*var demon = sprite({
+var saviour = sprite({
+  context: l3ctx,
+  x: 0,
+  y: 0,
+  moving: false,
+  srcX:0,
+  srcY: 0,
+  lastX:0,
+  lastY:0,
+  sheetwidth: 32,
+  sheetheight: 32,
+  sizewidth: 32,
+  sizeheight: 32,
+  image: saviourImage,
+  frameCount: 1,
+  curFrame: 0
+})
 
-  context: l2ctx,
-  x: 72,
-  y: 36,
+var demon1 = sprite({
+
+  context: l3ctx,
+  x: 0,
+  y: 0,
   moving: true,
   srcX:0,
   srcY: 0,
@@ -397,7 +415,45 @@ var player = sprite({
   image: demonImage,
   frameCount: 3,
   curFrame: 0
-})*/
+})
+
+var demon2 = sprite({
+
+  context: l3ctx,
+  x: 0,
+  y: 0,
+  moving: true,
+  srcX:0,
+  srcY: 0,
+  lastX:70,
+  lastY:30,
+  sheetwidth: 32,
+  sheetheight: 32,
+  sizewidth: 32,
+  sizeheight: 32,
+  image: demonImage,
+  frameCount: 3,
+  curFrame: 0
+})
+
+var demon3 = sprite({
+
+  context: l3ctx,
+  x: 0,
+  y: 0,
+  moving: true,
+  srcX:0,
+  srcY: 0,
+  lastX:70,
+  lastY:30,
+  sheetwidth: 32,
+  sheetheight: 32,
+  sizewidth: 32,
+  sizeheight: 32,
+  image: demonImage,
+  frameCount: 3,
+  curFrame: 0
+})
 
 var vortex = sprite({
   context: l2ctx,
@@ -534,10 +590,10 @@ function breadthFirstSearch(source){
 
             //if destination is found
             if((checking.x == goalX) && (checking.y == goalY)){
-                console.log("SOLVED! Distance is ", checking.dist);
+                //console.log("SOLVED! Distance is ", checking.dist);
 
                 shortestPath = checking.path;
-                console.log("PATH: ", shortestPath);
+                //console.log("PATH: ", shortestPath);
                 //solved = true;
                 return checking.dist;
             }
@@ -669,50 +725,79 @@ function demonAIinterpret(demon){
 
   var demonMatrixX = demon.x/36;
   var demonMatrixY = demon.y/36;
-  var speed = 4;
+  var speed = 36;
+  var mvdTR = false;
+  mvdTR = false;
 
-  demonMatrixX = Math.floor(demonMatrixX);
-  demonMatrixY = Math.floor(demonMatrixY);
   demon.lastX= demon.x;
   demon.lastY= demon.y;
-  //set here to visited on path
-  followPath[demonMatrixY][demonMatrixX] = 0;
+
+
+          //var editing
+          demonMatrixX = Math.floor(demonMatrixX);
+          demonMatrixY = Math.floor(demonMatrixY);
+          //set here to visited on path
+          followPath[demonMatrixY][demonMatrixX] = 0;
+
+        console.log("ADJACENTS: R = ",followPath[demonMatrixY][demonMatrixX+1], ", L = ", marked[demonMatrixY][demonMatrixX-1], ", U = ",  marked[demonMatrixY-1][demonMatrixX], ", D = ", marked[demonMatrixY+1][demonMatrixX]);
 
   //if on goal
   if((demonMatrixX==goalX)&&(demonMatrixY==goalY)){
-    speed = 10;
+    speed = 36;
   }
   //use marked to move
-    //right
-    if(followPath[demonMatrixY][demonMatrixX+1] == 1){
-      console.log("demon move right");
 
-      demon.moving = true;
-      demon.x+=speed;
-    }
-    //left
-    else if(followPath[demonMatrixY][demonMatrixX-1] == 1){
-      console.log("demon move left");
-      demon.moving = true;
-      demon.x-=speed;
-    }
-    //up
-    else if(followPath[demonMatrixY-1][demonMatrixX] == 1){
-      console.log("demon move up");
-      demon.moving = true;
-      demon.y-=speed;
-    }
-    //down
-    else if(followPath[demonMatrixY+1][demonMatrixX] == 1){
-      console.log("demon move down");
-      demon.moving = true;
-      demon.y+=speed;
-    }
-    else{
-      console.log("demon cant move");
+
+        if((followPath[demonMatrixY][demonMatrixX+1] == 1) && (mvdTR == false)){
+
+          //console.log("demon move right")
+          demon.moving = true;
+          demon.x+=speed;
+          mvdTR = true;
+
+
+          return;
+        }
+
+
+        //left
+        if((followPath[demonMatrixY][demonMatrixX-1] == 1) && (mvdTR == false)){
+
+        //  console.log("demon move left");
+          demon.moving = true;
+          demon.x-=speed;
+          mvdTR = true;
+
+          return;
+        }
+
+
+        //up
+        if((followPath[demonMatrixY-1][demonMatrixX] == 1) && (mvdTR == false)){
+
+      //   console.log("demon move up");
+          demon.moving = true;
+          demon.y-=speed;
+          mvdTR = true;
+
+          return;
+        }
+
+
+        //down
+        if((followPath[demonMatrixY+1][demonMatrixX] == 1) && (mvdTR == false)){
+
+      //   console.log("demon move down");
+          demon.moving = true;
+          demon.y+=speed;
+          mvdTR = true;
+
+          return;
+        }
+
+    // console.log("demon cant move");
       demon.moving = false;
-    }
-      console.log("ADJACENTS: R = ",followPath[demonMatrixY][demonMatrixX+1], ", L = ", marked[demonMatrixY][demonMatrixX-1], ", U = ",  marked[demonMatrixY-1][demonMatrixX], ", D = ", marked[demonMatrixY+1][demonMatrixX]);
+
 }
 
 function buildlevel(){
@@ -766,7 +851,25 @@ function buildlevel(){
         vortex.lastX = j * 36;
         vortex.lastY = i * 36;
         vortex.update();
-          demonSpawn(i, j);
+          if (noOfEnemy==0){
+            noOfEnemy+=1;
+            demon1.x = j*36;
+            demon1.y = i*36;
+            console.log("1 x set to ", demon1.x, "y set to ",demon1.y);
+          }
+          else if (noOfEnemy==1){
+            noOfEnemy+=1;
+            demon2.x = j*36;
+            demon2.y = i*36;
+            console.log("2 x set to ", demon2.x, "y set to ",demon2.y);
+          }
+          else if (noOfEnemy==2){
+            noOfEnemy+=1;
+            demon3.x = j*36;
+            demon3.y = i*36;
+            console.log("3 x set to ", demon3.x, "y set to ",demon3.y);
+          }
+
         //show
         vortex.show();
       }
@@ -782,30 +885,36 @@ function buildlevel(){
 
 }
 
-function demonSpawn(y, x){
+function demonSpawn(){
 
-  if (noOfEnemy == 0){
-    var demon1 = sprite({
+  console.log("Demon Spawn Running. noOfEnemy is ", noOfEnemy);
 
-      context: l2ctx,
-      x: x*36,
-      y: y*36,
-      moving: true,
-      srcX:0,
-      srcY: 0,
-      lastX:70,
-      lastY:30,
-      sheetwidth: 32,
-      sheetheight: 32,
-      sizewidth: 32,
-      sizeheight: 32,
-      image: demonImage,
-      frameCount: 3,
-      curFrame: 0
-    })
+  if (noOfEnemy == 1){
+      demon1.update();
+      demon1.show();
   }
 
-    //noOfEnemy+=1;
+  if (noOfEnemy == 2){
+    demon1.update();
+    demon1.show();
+    demon2.update();
+    demon2.show();
+  }
+
+  if (noOfEnemy == 3){
+    console.log("got in here!");
+    demon1.update();
+    demon1.show();
+    console.log("d1 spawn x = ", demon1.x);
+    demon2.update();
+    demon2.show();
+    console.log("d2 spawn x = ", demon2.x)
+    demon3.update();
+    demon3.show();
+    console.log("d3 spawn x = ", demon3.x)
+  }
+
+
 }
 
 //declare door
@@ -1134,8 +1243,16 @@ function collisionsUpdate(){
     }
 }
 
+//function for last level
+function endGame(){
+
+}
+
+var counter = 0;
+
 //gameloop
 function gameLoop(){
+  counter+=1;
     //set current matrix
     currentmatrix = level2matrix;
     //set background
@@ -1152,7 +1269,7 @@ function gameLoop(){
     //update movement
     movementUpdate();
 
-    if (noOfEnemy>0){
+    if((counter%6) == 0){
       //set enemy source to demon attributes
       enemySource.x = demon1.x;
       enemySource.y = demon1.y;
@@ -1160,9 +1277,28 @@ function gameLoop(){
       breadthFirstSearch(enemySource);
 
       demonAIinterpret(demon1);
-      demon1.update();
-      demon1.show();
+
+      //set enemy source to demon attributes
+      enemySource.x = demon2.x;
+      enemySource.y = demon2.y;
+      //send
+      breadthFirstSearch(enemySource);
+      demonAIinterpret(demon2);
+
+      //set enemy source to demon attributes
+      enemySource.x = demon3.x;
+      enemySource.y = demon3.y;
+      //send
+      breadthFirstSearch(enemySource);
+      demonAIinterpret(demon3);
+
+      demonSpawn();
     }
+
+
+      if (currentlevel == level4matrix){
+
+      }
 
 }
 //set for gameLoop to only occur every 200ms

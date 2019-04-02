@@ -1,5 +1,4 @@
 
-
 var goRight=false;
 var goLeft=false;
 var goUp=false;
@@ -12,6 +11,7 @@ var downcollision = false;
 //tell computer what keydown and keyup mean
 document.addEventListener('keydown', keyPressed, false);
 document.addEventListener('keyup', keyUnpressed, false);
+document.addEventListener('click', mouseIsPressed);
 //players wheravouts in game for making strings
 var playerlocationstr = "level0";
 var level = 0;
@@ -21,6 +21,9 @@ var noOfEnemy = 0;
 var keyInv1 = false;
 var keyInv2 = false;
 var keyInv3 = false;
+
+var set1cuts;
+var currentmatrix = set1cuts;
 
 //create canvas
 //Width and height for our canvas
@@ -50,10 +53,16 @@ var l3ctx = layer3.getContext("2d");
 //getting canvas 4th layer
 var layer4 = document.getElementById('layer4');
 //setting width and height of the canvas
-layer4.width = 1100;
+layer4.width = 300;
 layer4.height = 100;
 //Establishing a context to the canvas
 var l4ctx = layer4.getContext("2d");
+var layer5 = document.getElementById('layer5');
+//setting width and height of the canvas
+layer5.width = 900;
+layer5.height = 900;
+//Establishing a context to the canvas
+var l5ctx = layer5.getContext("2d");
 
 //importing graphics
 var maincharacterImage = new Image();
@@ -82,32 +91,92 @@ var saviourImage = new Image();
 saviourImage.src = "hero.png";
 var message = new Image();
 message.src = "textEnd.png";
+//scene one cutscenes
+var cutscene1a = new Image();
+cutscene1a.src = "cutscene1.png";
+var cutscene1b = new Image();
+cutscene1b.src = "cutscene2.png";
+var cutscene1c = new Image();
+cutscene1c.src = "cutscene3.png";
+var cutscene1d  = new Image();
+cutscene1d.src = "cutscene4.png";
+var cutscene1e  = new Image();
+cutscene1e.src = "cutscene5.png";
+var cutscene1f = new Image();
+cutscene1f.src = "cutscene6.png";
+var cutscene1g  = new Image();
+cutscene1g.src = "cutscene7.png";
+var cutscene1h  = new Image();
+cutscene1h.src = "cutscene8.png";
+var cutscene1i = new Image();
+cutscene1i.src = "cutscene9.png";
+var cutscene1j = new Image();
+cutscene1j.src = "cutscene10.png";
+//scene two cutscenes
+var cutscene2a = new Image();
+cutscene2a.src = "cutscene2-1.png";
+var cutscene2b = new Image();
+cutscene2b.src = "cutscene2-2.png";
+var cutscene2c = new Image();
+cutscene2c.src = "cutscene2-3.png";
+//scene five cutscenes
+var cutscene5 = new Image();
+cutscene5.src = "cutscene5-1.png";
+var sceneCounter=0;
 
-var cutscene = new Array()
-cutscene[0] = "cutscene1.png";
-cutscene[1] = "cutscene2.png";
-cutscene[2] = "cutscene3.png";
-cutscene[3] = "cutscene4.png";
-cutscene[4] = "cutscene5.png";
-cutscene[5] = "cutscene6.png";
-cutscene[6] = "cutscene7.png";
-cutscene[7] = "cutscene8.png";
-cutscene[8] = "cutscene9.png";
-cutscene[9] = "cutscene10.png";
-var c = 0;
-
-function changeScene(){
-var cut = document.getElementById('img');
-cutscene.src = cutscene[c];
-c++;
-
-if(c > cutscene.length){
-  c = 0;
-  currentmatrix = level0matrix;
+function mouseIsPressed(){
+  sceneCounter++;
+  console.log("click");
+  console.log(currentmatrix);
 }
 
-setTimeout('changeScene()', 10000);
+function sceneChange1(){
+  if(currentmatrix == set1cuts){
+    console.log("IN CUTS");
+    if(sceneCounter == 0){
+        l5ctx.drawImage(cutscene1a, 0, 0, 900, 900);
+    }
+    else if(sceneCounter == 1){
+      l5ctx.drawImage(cutscene1b, 0, 0, 900, 900)
+    }
+    else if(sceneCounter == 2){
+        l5ctx.drawImage(cutscene1c, 0, 0, 900, 900);
+    }
+    else if(sceneCounter == 3){
+        l5ctx.drawImage(cutscene1d, 0, 0, 900, 900);
+    }
+    else if(sceneCounter == 4){
+        l5ctx.drawImage(cutscene1e, 0, 0, 900, 900);
+    }
+    else if(sceneCounter == 5){
+      l5ctx.drawImage(cutscene1f, 0, 0, 900, 900)
+    }
+    else if(sceneCounter == 6){
+        l5ctx.drawImage(cutscene2a, 0, 0, 900, 900);
+    }
+    else if(sceneCounter == 7){
+      l5ctx.drawImage(cutscene2b, 0, 0, 900, 900)
+    }
+    else if(sceneCounter == 8){
+        l5ctx.drawImage(cutscene1i, 0, 0, 900, 900);
+    }
+    else if(sceneCounter == 9){
+      l5ctx.drawImage(cutscene1j, 0, 0, 900, 900)
+    }
+    else if(sceneCounter == 10){
+      l5ctx.drawImage(cutscene2c, 0, 0, 900, 900)
+    }
+    else if (sceneCounter == 11){
+      currentmatrix=level0matrix;
+      l5ctx.clearRect(0,0,900,900);
+      sceneCounter=0;
+      bgm1.play();
+    }
+  }
 }
+
+
+
 
 function soundFX(src) {
   this.sound = document.createElement("audio");
@@ -126,7 +195,6 @@ function soundFX(src) {
 
 var keySound = new soundFX("keyPickup.mp3");
 var doorSound = new soundFX("doorOpen.mp3");
-
 var bgm1 = new soundFX("liar.mp3");
 var bgm2 = new soundFX("null.mp3");;
 var bgm3 = new soundFX("alone.mp3");
@@ -213,7 +281,7 @@ var level1matrix = [
     [1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
-    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 0, 1],
     [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
@@ -260,7 +328,7 @@ var level3matrix1 = [
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0, 1, 4, 1, 0, 5, 0, 1, 4, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 4, 1, 0, 3, 0, 1, 4, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
@@ -357,6 +425,8 @@ var level4matrix2 = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
+
+
 
 //set background function
 function background(){
@@ -791,7 +861,7 @@ function demonAIinterpret(demon){
           //set here to visited on path
           followPath[demonMatrixY][demonMatrixX] = 0;
 
-        //console.log("ADJACENTS: R = ",followPath[demonMatrixY][demonMatrixX+1], ", L = ", marked[demonMatrixY][demonMatrixX-1], ", U = ",  marked[demonMatrixY-1][demonMatrixX], ", D = ", marked[demonMatrixY+1][demonMatrixX]);
+        console.log("ADJACENTS: R = ",followPath[demonMatrixY][demonMatrixX+1], ", L = ", marked[demonMatrixY][demonMatrixX-1], ", U = ",  marked[demonMatrixY-1][demonMatrixX], ", D = ", marked[demonMatrixY+1][demonMatrixX]);
 
   //if on goal
   if((demonMatrixX==goalX)&&(demonMatrixY==goalY)){
@@ -853,94 +923,96 @@ function demonAIinterpret(demon){
 }
 
 function buildlevel(){
-  //console.log(currentmatrix);
-  var xvalue = 0;
-  var yvalue = 0;
+  if(currentmatrix != set1cuts ){
+    //console.log(currentmatrix);
+    var xvalue = 0;
+    var yvalue = 0;
 
-  for(var i=0;i<=24;i++){
-    for(var j=0;j<=24;j++){
-      //if current matrix value holds a 1, signfies wall
-      if (currentmatrix[i][j] == 1){
-        //draw square at current i and j values size 36 by 36
-        l2ctx.drawImage(brickImage, xvalue, yvalue, 36, 36);
-      }
-      //if current matrix value holds 2, signifies door
-     if(currentmatrix[i][j] == 2){
-        //set to matrix value x 36 to be equivalent on scale of grid
-        door.x = j * 36;
-        door.y = (i * 36) - 12;
-        //show door
-        door.show();
-      }
-      //if current matrix value holds 3, signifies key
-              if(currentmatrix[i][j] == 5){
-                key1.x = (j * 36) + 9;
-                key1.y = (i * 36) + 5;
+    for(var i=0;i<=24;i++){
+      for(var j=0;j<=24;j++){
+        //if current matrix value holds a 1, signfies wall
+        if (currentmatrix[i][j] == 1){
+          //draw square at current i and j values size 36 by 36
+          l2ctx.drawImage(brickImage, xvalue, yvalue, 36, 36);
+        }
+        //if current matrix value holds 2, signifies door
+       if(currentmatrix[i][j] == 2){
+          //set to matrix value x 36 to be equivalent on scale of grid
+          door.x = j * 36;
+          door.y = (i * 36) - 12;
+          //show door
+          door.show();
+        }
+        //if current matrix value holds 3, signifies key
+                if(currentmatrix[i][j] == 5){
+                  key1.x = (j * 36) + 9;
+                  key1.y = (i * 36) + 5;
 
-                key1.show();
+                  key1.show();
+
+                }
+
+              if(currentmatrix[i][j] == 6){
+                key2.x = (j * 36) + 9;
+                key2.y = (i * 36) + 5;
+
+                key2.show();
 
               }
 
-            if(currentmatrix[i][j] == 6){
-              key2.x = (j * 36) + 9;
-              key2.y = (i * 36) + 5;
+            if(currentmatrix[i][j] == 3){
+              key3.x = (j * 36) + 9;
+              key3.y = (i * 36) + 5;
 
-              key2.show();
-
+              key3.show();
+            }
+        //if holds 4, signifies vortex
+        if(currentmatrix[i][j] == 4){
+          //update
+          vortex.x = j * 36;
+          vortex.y = i * 36;
+          vortex.lastX = j * 36;
+          vortex.lastY = i * 36;
+          vortex.update();
+            if (noOfEnemy==0){
+              noOfEnemy+=1;
+              demon1.x = j*36;
+              demon1.y = i*36;
+              console.log("1 x set to ", demon1.x, "y set to ",demon1.y);
+            }
+            else if (noOfEnemy==1){
+              noOfEnemy+=1;
+              demon2.x = j*36;
+              demon2.y = i*36;
+              console.log("2 x set to ", demon2.x, "y set to ",demon2.y);
+            }
+            else if (noOfEnemy==2){
+              noOfEnemy+=1;
+              demon3.x = j*36;
+              demon3.y = i*36;
+              console.log("3 x set to ", demon3.x, "y set to ",demon3.y);
             }
 
-          if(currentmatrix[i][j] == 3){
-            key3.x = (j * 36) + 9;
-            key3.y = (i * 36) + 5;
+          //show
+          vortex.show();
+        }
 
-            key3.show();
-          }
-
-      //if holds 4, signifies vortex
-      if(currentmatrix[i][j] == 4){
-        //update
-        vortex.x = j * 36;
-        vortex.y = i * 36;
-        vortex.lastX = j * 36;
-        vortex.lastY = i * 36;
-        vortex.update();
-          if (noOfEnemy==0){
-            noOfEnemy+=1;
-            demon1.x = j*36;
-            demon1.y = i*36;
-            console.log("1 x set to ", demon1.x, "y set to ",demon1.y);
-          }
-          else if (noOfEnemy==1){
-            noOfEnemy+=1;
-            demon2.x = j*36;
-            demon2.y = i*36;
-            console.log("2 x set to ", demon2.x, "y set to ",demon2.y);
-          }
-          else if (noOfEnemy==2){
-            noOfEnemy+=1;
-            demon3.x = j*36;
-            demon3.y = i*36;
-            console.log("3 x set to ", demon3.x, "y set to ",demon3.y);
-          }
-
-        //show
-        vortex.show();
+        xvalue+=36;
+        //console.log("Matrix Y = ", i, ", Matrix X = ", j, "Value = ", level0matrix[i][j])
       }
-
-      xvalue+=36;
-      //console.log("Matrix Y = ", i, ", Matrix X = ", j, "Value = ", level0matrix[i][j])
+      //reset y value
+      xvalue = 0;
+      //add to x
+      yvalue+=36;
     }
-    //reset y value
-    xvalue = 0;
-    //add to x
-    yvalue+=36;
   }
+
 
 }
 
 function demonSpawn(){
 
-  //console.log("Demon Spawn Running. noOfEnemy is ", noOfEnemy);
+  console.log("Demon Spawn Running. noOfEnemy is ", noOfEnemy);
 
   if (noOfEnemy == 1){
       demon1.update();
@@ -1025,6 +1097,7 @@ function heartobject(options){
   that.y = options.y;
 
   that.show=function(){
+    console.log("printed!");
       l4ctx.drawImage(heart, that.x, that.y, 36, 36);
   }
   that.clear = function(){
@@ -1159,7 +1232,7 @@ function keyPressed(event){
     goUp= true;
   }
 
-  if (event.keyCode == '88'){
+  else if (event.keyCode == '88'){
     interact = true;
     console.log('interact');
   }
@@ -1215,171 +1288,158 @@ function keyUnpressed(event){
 
 //general collisions FUNCTION
 function collisionsUpdate(){
-  //set all collisions to false
-  leftcollision = false;
-  rightcollision = false;
-  upcollision = false;
-  downcollision = false;
-  keycollision = false;
-  doorcollision = false;
+   if(currentmatrix != set1cuts){
+     //set all collisions to false
+     leftcollision = false;
+     rightcollision = false;
+     upcollision = false;
+     downcollision = false;
+     keycollision = false;
+     doorcollision = false;
 
-    //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
-    matrixX = (player.x+32)/36;
-    matrixY = (player.y+16)/36;
-    //round values down
-      matrixX = Math.floor(matrixX);
-      matrixY = Math.floor(matrixY);
-      //console.log("X = ", matrixX, "Y = ", matrixY);
-    //set collsisions based on matrix values around player
-    if(currentmatrix[matrixY][matrixX-1] == 1){
-      //set collision to true
-      leftcollision = true;
-      //console.log("LEFT COL, LOOKING AT A ", currentmatrix[matrixX - 1][matrixY], " WHEN CHECKING (",matrixX-1,", ", matrixY,")");
-    }
-    //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
-    matrixX = (player.x)/36;
-    matrixY = (player.y+16)/36;
-    //round values down
-      matrixX = Math.floor(matrixX);
-      matrixY = Math.floor(matrixY);
-    if(currentmatrix[matrixY][matrixX+1] == 1){
-      //set collision to true
-      rightcollision = true;
-      //console.log("RIGHT COL, LOOKING AT A ", currentmatrix[matrixX + 1][matrixY], " WHEN CHECKING (",matrixX+1,", ", matrixY,")");
-    }
-    //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
-    matrixX = (player.x+16)/36;
-    matrixY = (player.y)/36;
-    //round values down
-      matrixX = Math.floor(matrixX);
-      matrixY = Math.floor(matrixY);
-    if(currentmatrix[matrixY +1][matrixX] == 1){
-      //set collision to true
-      downcollision = true;
-      //console.log("DOWN COL, LOOKING AT A ", currentmatrix[matrixX][matrixY + 1], " WHEN CHECKING (",matrixX,", ", matrixY+1,")");
-    }
-    //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
-    matrixX = (player.x+16)/36;
-    matrixY = (player.y+32)/36;
-    //round values down
-      matrixX = Math.floor(matrixX);
-      matrixY = Math.floor(matrixY);
-    if(currentmatrix[matrixY -1][matrixX] == 1){
-      //set collision to true
-      upcollision = true;
-      //console.log("UP COL, LOOKING AT A ", currentmatrix[matrixX][matrixY - 1], " WHEN CHECKING (",matrixX,", ", matrixY-1,")");
-    }
-    //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
-    matrixX = (player.x+16)/36;
-    matrixY = (player.y+16)/36;
-    //round values down
-      matrixX = Math.floor(matrixX);
-      matrixY = Math.floor(matrixY);
+       //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
+       matrixX = (player.x+32)/36;
+       matrixY = (player.y+16)/36;
+       //round values down
+         matrixX = Math.floor(matrixX);
+         matrixY = Math.floor(matrixY);
+         //console.log("X = ", matrixX, "Y = ", matrixY);
+       //set collsisions based on matrix values around player
+       if(currentmatrix[matrixY][matrixX-1] == 1){
+         //set collision to true
+         leftcollision = true;
+         //console.log("LEFT COL, LOOKING AT A ", currentmatrix[matrixX - 1][matrixY], " WHEN CHECKING (",matrixX-1,", ", matrixY,")");
+       }
+       //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
+       matrixX = (player.x)/36;
+       matrixY = (player.y+16)/36;
+       //round values down
+         matrixX = Math.floor(matrixX);
+         matrixY = Math.floor(matrixY);
+       if(currentmatrix[matrixY][matrixX+1] == 1){
+         //set collision to true
+         rightcollision = true;
+         //console.log("RIGHT COL, LOOKING AT A ", currentmatrix[matrixX + 1][matrixY], " WHEN CHECKING (",matrixX+1,", ", matrixY,")");
+       }
+       //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
+       matrixX = (player.x+16)/36;
+       matrixY = (player.y)/36;
+       //round values down
+         matrixX = Math.floor(matrixX);
+         matrixY = Math.floor(matrixY);
+       if(currentmatrix[matrixY +1][matrixX] == 1){
+         //set collision to true
+         downcollision = true;
+         //console.log("DOWN COL, LOOKING AT A ", currentmatrix[matrixX][matrixY + 1], " WHEN CHECKING (",matrixX,", ", matrixY+1,")");
+       }
+       //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
+       matrixX = (player.x+16)/36;
+       matrixY = (player.y+32)/36;
+       //round values down
+         matrixX = Math.floor(matrixX);
+         matrixY = Math.floor(matrixY);
+       if(currentmatrix[matrixY -1][matrixX] == 1){
+         //set collision to true
+         upcollision = true;
+         //console.log("UP COL, LOOKING AT A ", currentmatrix[matrixX][matrixY - 1], " WHEN CHECKING (",matrixX,", ", matrixY-1,")");
+       }
+       //first get player matrix locations by adding 16 to find middle of object and dividing current by 36
+       matrixX = (player.x+16)/36;
+       matrixY = (player.y+16)/36;
+       //round values down
+         matrixX = Math.floor(matrixX);
+         matrixY = Math.floor(matrixY);
 
-      if(currentmatrix[matrixX][matrixY] == 5 && interact){
-              //set collision to true
-              keycollision1 = true;
-              console.log("KEY COL");
-              keyInv1 = true;
-              key1.pickedup = true;
-              keySound.play();
+         if(currentmatrix[matrixX][matrixY] == 5 && interact){
+                 //set collision to true
+                 keycollision1 = true;
+                 console.log("KEY COL");
+                 keyInv1 = true;
+                 key1.pickedup = true;
+                 keySound.play();
 
-              if(keyInv1 == true){
-                console.log('you got a key');
-              }
+                 if(keyInv1 == true){
+                   console.log('you got a key');
+                 }
 
-      }
-              if(currentmatrix[matrixX][matrixY] == 3 && interact){
-                //set collision to true
-                keycollision2 = true;
-                console.log("KEY COL");
-                keyInv2 = true;
-                key2.pickedup = true;
-                keySound.play();
+         }
+                 if(currentmatrix[matrixX][matrixY] == 3 && interact){
+                   //set collision to true
+                   keycollision2 = true;
+                   console.log("KEY COL");
+                   keyInv2 = true;
+                   key2.pickedup = true;
+                   keySound.play();
 
-                if(keyInv2 == true){
-                  console.log('you got a key');
-                }
-      }
-                if(currentmatrix[matrixX][matrixY] == 6 && interact){
-                  //set collision to true
-                  keycollision3 = true;
-                  console.log("KEY COL");
-                  keyInv3 = true;
-                  key3.pickedup = true;
-                  keySound.play();
+                   if(keyInv2 == true){
+                     console.log('you got a key');
+                   }
+         }
+                   if(currentmatrix[matrixX][matrixY] == 6 && interact){
+                     //set collision to true
+                     keycollision3 = true;
+                     console.log("KEY COL");
+                     keyInv3 = true;
+                     key3.pickedup = true;
+                     keySound.play();
 
-                  if(keyInv3 == true){
-                    console.log('you got a key');
-                  }
+                     if(keyInv3 == true){
+                       console.log('you got a key');
+                     }
 
-            }
+               }
 
-            if(currentmatrix == level0matrix){
-              if(keyInv1 == true){
-                door.unlocked = true;
-              }
-            }
-            if(currentmatrix == level1matrix){
-              if(keyInv1 == true){
-                door.unlocked = true;
-                if(door.unlocked==true){
-                  console.log("door is open");
-                }
-              }
-            }
-            if(currentmatrix == level2matrix){
-              if((keyInv1==true)&&(keyInv2==true)&&(keyInv3==true)){
+               if(currentmatrix == level0matrix){
+                 if(keyInv1 == true){
+                   door.unlocked = true;
+                 }
+               }
+               if(currentmatrix == level1matrix){
+                 if(keyInv1 == true){
+                   door.unlocked = true;
+                 }
+               }
+               if(currentmatrix == level2matrix){
+                 if((keyInv1==true)&&(keyInv2==true)&&(keyInv3==true)){
 
-                door.unlocked = true;
+                   door.unlocked = true;
 
-              }
-            }
-            if(currentmatrix == level3matrix1){
-              if(keyInv1==true){
-                door.unlocked = true;
+                 }
+               }
 
-              }
-            }
+                 var thisdemonMatrixX = demon1.x/36;
+                 var thisdemonMatrixY = demon1.y/36;
+                 thisdemonMatrixX = Math.floor(thisdemonMatrixX);
+                 thisdemonMatrixY = Math.floor(thisdemonMatrixY);
+               if((matrixX == thisdemonMatrixX)&&(matrixY == thisdemonMatrixY)){
+                 life-=1;
+               }
+               var thisdemonMatrixX = demon2.x/36;
+               var thisdemonMatrixY = demon2.y/36;
+               thisdemonMatrixX = Math.floor(thisdemonMatrixX);
+               thisdemonMatrixY = Math.floor(thisdemonMatrixY);
+             if((matrixX == thisdemonMatrixX)&&(matrixY == thisdemonMatrixY)){
+               life-=1;
+             }
+             var thisdemonMatrixX = demon3.x/36;
+             var thisdemonMatrixY = demon3.y/36;
+             thisdemonMatrixX = Math.floor(thisdemonMatrixX);
+             thisdemonMatrixY = Math.floor(thisdemonMatrixY);
+           if((matrixX == thisdemonMatrixX)&&(matrixY == thisdemonMatrixY)){
+             life-=1;
+           }
 
-              var thisdemonMatrixX = demon1.x/36;
-              var thisdemonMatrixY = demon1.y/36;
-              thisdemonMatrixX = Math.floor(thisdemonMatrixX);
-              thisdemonMatrixY = Math.floor(thisdemonMatrixY);
-            if((matrixX == thisdemonMatrixX)&&(matrixY == thisdemonMatrixY)){
-              life-=1;
-            }
-            var thisdemonMatrixX = demon2.x/36;
-            var thisdemonMatrixY = demon2.y/36;
-            thisdemonMatrixX = Math.floor(thisdemonMatrixX);
-            thisdemonMatrixY = Math.floor(thisdemonMatrixY);
-          if((matrixX == thisdemonMatrixX)&&(matrixY == thisdemonMatrixY)){
-            life-=1;
-          }
-          var thisdemonMatrixX = demon3.x/36;
-          var thisdemonMatrixY = demon3.y/36;
-          thisdemonMatrixX = Math.floor(thisdemonMatrixX);
-          thisdemonMatrixY = Math.floor(thisdemonMatrixY);
-        if((matrixX == thisdemonMatrixX)&&(matrixY == thisdemonMatrixY)){
-          life-=1;
-        }
+       if(currentmatrix[matrixX][matrixY] == 2 && door.unlocked == true && interact == true){
+         //set collision to true
+         doorcollision = true;
+         doorSound.play();
+         console.log("DOOR COL");
+         door.opened = true;
+         keyInv = false;
+         door.unlocked = false;
+       }
+   }
 
-        matrixX = player.x/36;
-        matrixY = player.y/36;
-        //round values down
-        matrixX = Math.floor(matrixX);
-        matrixY = Math.floor(matrixY);
-        console.log("CUR, ",currentmatrix[matrixX][matrixY], "Interacting: ", interact, "current is x", matrixX, "y ", matrixY);
-        console.log("door loc  ", currentmatrix[8][9]);
-    if(currentmatrix[matrixY][matrixX] == 2 && door.unlocked == true && interact == true){
-      //set collision to true
-      doorcollision = true;
-      doorSound.play();
-      console.log("DOOR COL");
-      door.opened = true;
-      keyInv = false;
-      door.unlocked = false;
-    }
 }
 
 //function for last level
@@ -1408,7 +1468,7 @@ function endGame(){
     l1ctx.clearRect(144, 72, 36, 36);
     l1ctx.clearRect(144, 108, 36, 36);
     l3ctx.clearRect(36,180, 180,36);
-
+     l5ctx.drawImage(cutscene5, 0, 0, 900, 900);
 
   }
 
@@ -1416,9 +1476,6 @@ function endGame(){
 
 var counter = 0;
 
-var currentmatrix = level0matrix;
-
-bgm1.play();
 function switcher(){
           if(door.opened == true && currentmatrix == level0matrix){
             currentmatrix = level1matrix;
@@ -1432,10 +1489,7 @@ function switcher(){
             door.unlocked = false;
             player.x = 36;
             player.y = 36;
-            l1ctx.clearRect(0, 0, 900, 900);
             l2ctx.clearRect(0, 0, 900, 900);
-            l3ctx.clearRect(0, 0, 900, 900);
-            l4ctx.clearRect(0, 0, 900, 900);
             bgm1.stop();
 
             bgm2.play();
@@ -1446,14 +1500,7 @@ function switcher(){
             keyInv1 = false;
             keyInv2 = false;
             keyInv3 = false;
-            key1.pickedup = false;
-            key2.pickedup = false;
-            key3.pickedup = false;
             door.unlocked = false;
-            l1ctx.clearRect(0, 0, 900, 900);
-            l2ctx.clearRect(0, 0, 900, 900);
-            l3ctx.clearRect(0, 0, 900, 900);
-            l4ctx.clearRect(0, 0, 900, 900);
             player.x = 36;
             player.y = 36;
             bgm2.stop();
@@ -1466,15 +1513,7 @@ function switcher(){
             keyInv1 = false;
             keyInv2 = false;
             keyInv3 = false;
-
-            key1.pickedup = false;
-            key2.pickedup = false;
-            key3.pickedup = false;
             door.unlocked = false;
-            l1ctx.clearRect(0, 0, 900, 900);
-            l2ctx.clearRect(0, 0, 900, 900);
-            l3ctx.clearRect(0, 0, 900, 900);
-            l4ctx.clearRect(0, 0, 900, 900);
             player.x = 36;
             player.y = 36;
             bgm3.stop();
@@ -1487,13 +1526,6 @@ function switcher(){
           keyInv1 = false;
           keyInv2 = false;
           keyInv3 = false;
-          l1ctx.clearRect(0, 0, 900, 900);
-          l2ctx.clearRect(0, 0, 900, 900);
-          l3ctx.clearRect(0, 0, 900, 900);
-          l4ctx.clearRect(0, 0, 900, 900);
-          key1.pickedup = false;
-          key2.pickedup = false;
-          key3.pickedup = false;
           door.unlocked = false;
           player.x = 36;
           player.y = 36;
@@ -1507,13 +1539,6 @@ function switcher(){
           keyInv1 = false;
           keyInv2 = false;
           keyInv3 = false;
-          l1ctx.clearRect(0, 0, 900, 900);
-          l2ctx.clearRect(0, 0, 900, 900);
-          l3ctx.clearRect(0, 0, 900, 900);
-          l4ctx.clearRect(0, 0, 900, 900);
-          key1.pickedup = false;
-          key2.pickedup = false;
-          key3.pickedup = false;
           door.unlocked = false;
           player.x = 36;
           player.y = 36;
@@ -1524,10 +1549,13 @@ function switcher(){
 
 }
 
+
+
 //gameloop
 function gameLoop(){
     counter+=1;
     switcher();
+    sceneChange1();
     //set background
     background();
     //Updating the frame
@@ -1535,15 +1563,7 @@ function gameLoop(){
     //Drawing the player
     player.show();
 
-    if(life == 0){
-      noOfEnemy = 0;
-      player.x = 36;
-      player.y = 36;
-      life = 3;
-      l1ctx.clearRect(0, 0, 900, 900);
-      l2ctx.clearRect(0, 0, 900, 900);
-      l3ctx.clearRect(0, 0, 900, 900);
-    }
+    console.log("life is ", life);
     if(life == 1){
       heart1.show();
     heart2.clear();
@@ -1616,5 +1636,4 @@ function gameLoop(){
 }
 //set for gameLoop to only occur every 100ms
 setInterval(gameLoop,100);
-
 

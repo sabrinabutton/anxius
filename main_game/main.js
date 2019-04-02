@@ -1,25 +1,4 @@
 
-var goRight=false;
-var goLeft=false;
-var goUp=false;
-var goDown=false;
-//collision variables
-var leftcollision = false;
-var rightcollision = false;
-var upcollision = false;
-var downcollision = false;
-//tell computer what keydown and keyup mean
-document.addEventListener('keydown', keyPressed, false);
-document.addEventListener('keyup', keyUnpressed, false);
-//players wheravouts in game for making strings
-var playerlocationstr = "level0";
-var level = 0;
-var noOfEnemy = 0;
-//inventory
-
-var keyInv1 = false;
-var keyInv2 = false;
-var keyInv3 = false;
 
 var goRight=false;
 var goLeft=false;
@@ -103,6 +82,32 @@ var saviourImage = new Image();
 saviourImage.src = "hero.png";
 var message = new Image();
 message.src = "textEnd.png";
+
+var cutscene = new Array()
+cutscene[0] = "cutscene1.png";
+cutscene[1] = "cutscene2.png";
+cutscene[2] = "cutscene3.png";
+cutscene[3] = "cutscene4.png";
+cutscene[4] = "cutscene5.png";
+cutscene[5] = "cutscene6.png";
+cutscene[6] = "cutscene7.png";
+cutscene[7] = "cutscene8.png";
+cutscene[8] = "cutscene9.png";
+cutscene[9] = "cutscene10.png";
+var c = 0;
+
+function changeScene(){
+var cut = document.getElementById('img');
+cutscene.src = cutscene[c];
+c++;
+
+if(c > cutscene.length){
+  c = 0;
+  currentmatrix = level0matrix;
+}
+
+setTimeout('changeScene()', 10000);
+}
 
 function soundFX(src) {
   this.sound = document.createElement("audio");
@@ -208,7 +213,7 @@ var level1matrix = [
     [1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
-    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 0, 1],
     [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
@@ -255,7 +260,7 @@ var level3matrix1 = [
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0, 1, 4, 1, 0, 3, 0, 1, 4, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 4, 1, 0, 5, 0, 1, 4, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
@@ -786,7 +791,7 @@ function demonAIinterpret(demon){
           //set here to visited on path
           followPath[demonMatrixY][demonMatrixX] = 0;
 
-        console.log("ADJACENTS: R = ",followPath[demonMatrixY][demonMatrixX+1], ", L = ", marked[demonMatrixY][demonMatrixX-1], ", U = ",  marked[demonMatrixY-1][demonMatrixX], ", D = ", marked[demonMatrixY+1][demonMatrixX]);
+        //console.log("ADJACENTS: R = ",followPath[demonMatrixY][demonMatrixX+1], ", L = ", marked[demonMatrixY][demonMatrixX-1], ", U = ",  marked[demonMatrixY-1][demonMatrixX], ", D = ", marked[demonMatrixY+1][demonMatrixX]);
 
   //if on goal
   if((demonMatrixX==goalX)&&(demonMatrixY==goalY)){
@@ -890,6 +895,7 @@ function buildlevel(){
 
             key3.show();
           }
+
       //if holds 4, signifies vortex
       if(currentmatrix[i][j] == 4){
         //update
@@ -934,7 +940,7 @@ function buildlevel(){
 
 function demonSpawn(){
 
-  console.log("Demon Spawn Running. noOfEnemy is ", noOfEnemy);
+  //console.log("Demon Spawn Running. noOfEnemy is ", noOfEnemy);
 
   if (noOfEnemy == 1){
       demon1.update();
@@ -1019,7 +1025,6 @@ function heartobject(options){
   that.y = options.y;
 
   that.show=function(){
-    console.log("printed!");
       l4ctx.drawImage(heart, that.x, that.y, 36, 36);
   }
   that.clear = function(){
@@ -1154,7 +1159,7 @@ function keyPressed(event){
     goUp= true;
   }
 
-  else if (event.keyCode == '88'){
+  if (event.keyCode == '88'){
     interact = true;
     console.log('interact');
   }
@@ -1318,11 +1323,20 @@ function collisionsUpdate(){
             if(currentmatrix == level1matrix){
               if(keyInv1 == true){
                 door.unlocked = true;
+                if(door.unlocked==true){
+                  console.log("door is open");
+                }
               }
             }
             if(currentmatrix == level2matrix){
               if((keyInv1==true)&&(keyInv2==true)&&(keyInv3==true)){
 
+                door.unlocked = true;
+
+              }
+            }
+            if(currentmatrix == level3matrix1){
+              if(keyInv1==true){
                 door.unlocked = true;
 
               }
@@ -1350,7 +1364,14 @@ function collisionsUpdate(){
           life-=1;
         }
 
-    if(currentmatrix[matrixX][matrixY] == 2 && door.unlocked == true && interact == true){
+        matrixX = player.x/36;
+        matrixY = player.y/36;
+        //round values down
+        matrixX = Math.floor(matrixX);
+        matrixY = Math.floor(matrixY);
+        console.log("CUR, ",currentmatrix[matrixX][matrixY], "Interacting: ", interact, "current is x", matrixX, "y ", matrixY);
+        console.log("door loc  ", currentmatrix[8][9]);
+    if(currentmatrix[matrixY][matrixX] == 2 && door.unlocked == true && interact == true){
       //set collision to true
       doorcollision = true;
       doorSound.play();
@@ -1396,7 +1417,6 @@ function endGame(){
 var counter = 0;
 
 var currentmatrix = level0matrix;
-var currentmatrix = level0matrix;
 
 bgm1.play();
 function switcher(){
@@ -1412,7 +1432,10 @@ function switcher(){
             door.unlocked = false;
             player.x = 36;
             player.y = 36;
+            l1ctx.clearRect(0, 0, 900, 900);
             l2ctx.clearRect(0, 0, 900, 900);
+            l3ctx.clearRect(0, 0, 900, 900);
+            l4ctx.clearRect(0, 0, 900, 900);
             bgm1.stop();
 
             bgm2.play();
@@ -1423,7 +1446,14 @@ function switcher(){
             keyInv1 = false;
             keyInv2 = false;
             keyInv3 = false;
+            key1.pickedup = false;
+            key2.pickedup = false;
+            key3.pickedup = false;
             door.unlocked = false;
+            l1ctx.clearRect(0, 0, 900, 900);
+            l2ctx.clearRect(0, 0, 900, 900);
+            l3ctx.clearRect(0, 0, 900, 900);
+            l4ctx.clearRect(0, 0, 900, 900);
             player.x = 36;
             player.y = 36;
             bgm2.stop();
@@ -1436,7 +1466,15 @@ function switcher(){
             keyInv1 = false;
             keyInv2 = false;
             keyInv3 = false;
+
+            key1.pickedup = false;
+            key2.pickedup = false;
+            key3.pickedup = false;
             door.unlocked = false;
+            l1ctx.clearRect(0, 0, 900, 900);
+            l2ctx.clearRect(0, 0, 900, 900);
+            l3ctx.clearRect(0, 0, 900, 900);
+            l4ctx.clearRect(0, 0, 900, 900);
             player.x = 36;
             player.y = 36;
             bgm3.stop();
@@ -1449,6 +1487,13 @@ function switcher(){
           keyInv1 = false;
           keyInv2 = false;
           keyInv3 = false;
+          l1ctx.clearRect(0, 0, 900, 900);
+          l2ctx.clearRect(0, 0, 900, 900);
+          l3ctx.clearRect(0, 0, 900, 900);
+          l4ctx.clearRect(0, 0, 900, 900);
+          key1.pickedup = false;
+          key2.pickedup = false;
+          key3.pickedup = false;
           door.unlocked = false;
           player.x = 36;
           player.y = 36;
@@ -1462,6 +1507,13 @@ function switcher(){
           keyInv1 = false;
           keyInv2 = false;
           keyInv3 = false;
+          l1ctx.clearRect(0, 0, 900, 900);
+          l2ctx.clearRect(0, 0, 900, 900);
+          l3ctx.clearRect(0, 0, 900, 900);
+          l4ctx.clearRect(0, 0, 900, 900);
+          key1.pickedup = false;
+          key2.pickedup = false;
+          key3.pickedup = false;
           door.unlocked = false;
           player.x = 36;
           player.y = 36;
@@ -1471,8 +1523,6 @@ function switcher(){
         }
 
 }
-
-
 
 //gameloop
 function gameLoop(){
@@ -1485,7 +1535,15 @@ function gameLoop(){
     //Drawing the player
     player.show();
 
-    console.log("life is ", life);
+    if(life == 0){
+      noOfEnemy = 0;
+      player.x = 36;
+      player.y = 36;
+      life = 3;
+      l1ctx.clearRect(0, 0, 900, 900);
+      l2ctx.clearRect(0, 0, 900, 900);
+      l3ctx.clearRect(0, 0, 900, 900);
+    }
     if(life == 1){
       heart1.show();
     heart2.clear();
@@ -1558,4 +1616,5 @@ function gameLoop(){
 }
 //set for gameLoop to only occur every 100ms
 setInterval(gameLoop,100);
+
 

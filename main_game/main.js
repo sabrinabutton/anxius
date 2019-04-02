@@ -1587,6 +1587,15 @@ function gameLoop(){
     player.show();
 
     console.log("life is ", life);
+    if(life == 0){
+      life = 3;
+      noOfEnemy = 0;
+      player.x = 36;
+      player.y = 36;
+      l1ctx.clearRect(0,0,900,900);
+      l2ctx.clearRect(0,0,900,900);
+      l3ctx.clearRect(0,0,900,900);
+    }
     if(life == 1){
       heart1.show();
     heart2.clear();
@@ -1659,5 +1668,3 @@ function gameLoop(){
 }
 //set for gameLoop to only occur every 100ms
 setInterval(gameLoop,100);
-
-

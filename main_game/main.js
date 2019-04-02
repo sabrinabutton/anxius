@@ -1,4 +1,3 @@
-
 var goRight=false;
 var goLeft=false;
 var goUp=false;
@@ -281,7 +280,7 @@ var level1matrix = [
     [1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
-    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 0, 1],
     [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
@@ -328,7 +327,7 @@ var level3matrix1 = [
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0, 1, 4, 1, 0, 3, 0, 1, 4, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 4, 1, 0, 5, 0, 1, 4, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
@@ -1406,6 +1405,11 @@ function collisionsUpdate(){
 
                  }
                }
+               if(currentmatrix == level3matrix1){
+                 if(keyInv1 == true){
+                   door.unlocked = true;
+                 }
+               }
 
                  var thisdemonMatrixX = demon1.x/36;
                  var thisdemonMatrixY = demon1.y/36;
@@ -1429,7 +1433,7 @@ function collisionsUpdate(){
              life-=1;
            }
 
-       if(currentmatrix[matrixX][matrixY] == 2 && door.unlocked == true && interact == true){
+       if(currentmatrix[matrixY][matrixX] == 2 && door.unlocked == true && interact == true){
          //set collision to true
          doorcollision = true;
          doorSound.play();
@@ -1489,7 +1493,10 @@ function switcher(){
             door.unlocked = false;
             player.x = 36;
             player.y = 36;
+            l1ctx.clearRect(0, 0, 900, 900);
             l2ctx.clearRect(0, 0, 900, 900);
+            l3ctx.clearRect(0, 0, 900, 900);
+            l4ctx.clearRect(0, 0, 900, 900);
             bgm1.stop();
 
             bgm2.play();
@@ -1503,6 +1510,10 @@ function switcher(){
             door.unlocked = false;
             player.x = 36;
             player.y = 36;
+            l1ctx.clearRect(0, 0, 900, 900);
+            l2ctx.clearRect(0, 0, 900, 900);
+            l3ctx.clearRect(0, 0, 900, 900);
+            l4ctx.clearRect(0, 0, 900, 900);
             bgm2.stop();
 
             bgm3.play();
@@ -1516,6 +1527,10 @@ function switcher(){
             door.unlocked = false;
             player.x = 36;
             player.y = 36;
+            l1ctx.clearRect(0, 0, 900, 900);
+            l2ctx.clearRect(0, 0, 900, 900);
+            l3ctx.clearRect(0, 0, 900, 900);
+            l4ctx.clearRect(0, 0, 900, 900);
             bgm3.stop();
 
             bgm4.play();
@@ -1529,6 +1544,10 @@ function switcher(){
           door.unlocked = false;
           player.x = 36;
           player.y = 36;
+          l1ctx.clearRect(0, 0, 900, 900);
+          l2ctx.clearRect(0, 0, 900, 900);
+          l3ctx.clearRect(0, 0, 900, 900);
+          l4ctx.clearRect(0, 0, 900, 900);
           bgm4.stop();
 
           bgm5.play();
@@ -1542,6 +1561,10 @@ function switcher(){
           door.unlocked = false;
           player.x = 36;
           player.y = 36;
+          l1ctx.clearRect(0, 0, 900, 900);
+          l2ctx.clearRect(0, 0, 900, 900);
+          l3ctx.clearRect(0, 0, 900, 900);
+          l4ctx.clearRect(0, 0, 900, 900);
           bgm5.stop();
 
           bgm6.play();
@@ -1636,4 +1659,5 @@ function gameLoop(){
 }
 //set for gameLoop to only occur every 100ms
 setInterval(gameLoop,100);
+
 
